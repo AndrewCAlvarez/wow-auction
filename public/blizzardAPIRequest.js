@@ -1,9 +1,5 @@
 // If there are errors with this module in github pages, check firefox and other sources for changing the file type to .mjs
 
-let accessToken = "";
-const hostName = "us.api.blizzard.com";
-const namespace = "namespace=dynamic-us&locale=en_US";
-
 let connectedRealms = [];
 
 // const params = {
@@ -25,20 +21,19 @@ export function getAccessToken(clientId, clientSecret, grantType) {
     options
   );
 
-  console.log(fetchTokenPromise);
-
   fetchTokenPromise
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       accessToken = data.access_token;
-      console.log(accessToken);
     });
 
-  console.log("Fetching access token...");
+  return accessToken;
 }
 
-export function getConnectedRealms() {
+export function getConnectedRealms(accessToken) {
+  const hostName = "us.api.blizzard.com";
+  const namespace = "namespace=dynamic-us&locale=en_US";
+
   fetch(
     `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`
   )
