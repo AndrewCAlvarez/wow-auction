@@ -16,11 +16,7 @@ app.get("/", (req, res) => {
 
 app.get("/api", (req, res) => {
   console.log("Get /api");
-  getAccessToken(
-    "701a8a5976ab4346ba5c4b151ca76132",
-    "MAh3G6I93NogGlz3Kwy8jbdknDJklagd",
-    "client_credentials"
-  );
+  getAccessToken();
 });
 
 app.listen(port, () => {
