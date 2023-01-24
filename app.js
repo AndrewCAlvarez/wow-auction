@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import {
   getAccessToken,
   getConnectedRealms,
@@ -7,15 +8,15 @@ import {
 
 const app = express();
 const port = 3000;
-
+app.use(cors());
 dotenv.config();
 let accessToken = "";
 
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  console.log("Getting index.html");
-  res.send("./index.html");
+  // console.log("Getting index.html");
+  // res.send("./index.html");
 });
 
 app.get("/api/realm-list", (req, res) => {
@@ -57,10 +58,11 @@ app.get("/api/realm-list", (req, res) => {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
+      res.json(data);
     });
 
   console.log("Getting realm list...");
-  res.redirect("/index.html");
+  // res.redirect("/index.html");
 
   // console.log(`Access token sent: ${accessToken}`);
   // getConnectedRealms(accessToken);
