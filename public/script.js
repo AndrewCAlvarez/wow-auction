@@ -2,7 +2,7 @@ function getRealmList() {
   fetch("http://127.0.0.1:3000/api/realm-list")
     .then((response) => response.json())
     .then((data) => {
-      return data;
+      console.log(data);
     });
 }
 

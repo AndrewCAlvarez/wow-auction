@@ -29,7 +29,8 @@ app.get("/api/realm-list", (req, res) => {
   */
   let accessToken = "";
   let realmIDs = [];
-  let realms = [];
+  let realmNames = [];
+
   const hostName = "us.api.blizzard.com";
   const namespace = "namespace=dynamic-us&locale=en_US";
   const params = {
@@ -69,21 +70,29 @@ app.get("/api/realm-list", (req, res) => {
             .replace("?namespace=dynamic-us", "")
         );
       });
-      console.log(realmIDs);
-      res.json(data);
+      // console.log(realmIDs);
+      // res.json(data);
     })
     .then(() => {
-      // Fetch individual realm info and push to realms array.
+      let realmData = [];
       realmIDs.forEach((realmID) => {
-        fetch(
-          `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
-        ).then((response) => response.json());
-        // .then((data) => realms.push(data));
+        realmData.push(
+          fetch(
+            `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
+          )
+        );
       });
-      // res.json(realms);
-    });
 
-  console.log("Getting realm list...");
+      // Fetch individual realm info and push to realms array.
+      Promise.all(realmData).then((responses) => {
+        for (const response of responses) {
+          response.json().then((data) => console.log(data.realms[0].name));
+        }
+      });
+    })
+    .catch((error) => {
+      console.error(`ERROR: ${error}`);
+    });
 });
 
 app.listen(port, () => {
