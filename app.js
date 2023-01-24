@@ -28,6 +28,8 @@ app.get("/api/realm-list", (req, res) => {
   - return data to user 
   */
   let accessToken = "";
+  let realmIDs = [];
+  let realms = [];
   const hostName = "us.api.blizzard.com";
   const namespace = "namespace=dynamic-us&locale=en_US";
   const params = {
@@ -57,15 +59,31 @@ app.get("/api/realm-list", (req, res) => {
     )
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      data.connected_realms.forEach((realmhref) => {
+        realmIDs.push(
+          realmhref.href
+            .replace(
+              "https://us.api.blizzard.com/data/wow/connected-realm/",
+              ""
+            )
+            .replace("?namespace=dynamic-us", "")
+        );
+      });
+      console.log(realmIDs);
       res.json(data);
+    })
+    .then(() => {
+      // Fetch individual realm info and push to realms array.
+      realmIDs.forEach((realmID) => {
+        fetch(
+          `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
+        ).then((response) => response.json());
+        // .then((data) => realms.push(data));
+      });
+      // res.json(realms);
     });
 
   console.log("Getting realm list...");
-  // res.redirect("/index.html");
-
-  // console.log(`Access token sent: ${accessToken}`);
-  // getConnectedRealms(accessToken);
 });
 
 app.listen(port, () => {
