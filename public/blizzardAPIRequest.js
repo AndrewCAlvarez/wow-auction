@@ -13,21 +13,24 @@ const options = {
 
 export function getAccessToken(clientId, clientSecret, grantType) {
   let accessToken = "";
-  const hostName = "us.api.blizzard.com";
-  const namespace = "namespace=dynamic-us&locale=en_US";
+
+  console.log("Fetching access token...");
 
   const fetchTokenPromise = fetch(
     `https://oauth.battle.net/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=${grantType}`,
     options
   );
 
+  console.log(fetchTokenPromise);
+
   fetchTokenPromise
     .then((response) => response.json())
     .then((data) => {
-      accessToken = data.access_token;
+      console.log(
+        `\nfetchTokenPromise after response: \n ${fetchTokenPromise}`
+      );
+      return data.access_token;
     });
-
-  return accessToken;
 }
 
 export function getConnectedRealms(accessToken) {
