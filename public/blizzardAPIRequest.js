@@ -66,15 +66,30 @@ async function getAccessToken(clientID, clientSecret, grantType) {
     .then((response) => response.json())
     .then((data) => {
       accessToken = data.access_token;
-      console.log(`Access token value: ${accessToken}`);
     });
 
   return accessToken;
 }
 
+async function getRealmIndex(accessToken) {
+  let realmIndexData;
+  const realmIndexURL = `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`;
+
+  await fetch(realmIndexURL)
+    .then((response) => response.json())
+    .then((data) => {
+      realmIndexData = data;
+    });
+
+  return realmIndexData;
+}
+
 async function getRealmListData(clientID, clientSecret, grant_type) {
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
+  console.log(`Current value of accessToken: ${accessToken}`);
 
+  const realmIndex = await getRealmIndex(accessToken);
+  console.log(realmIndex);
   // .then(() =>
   //   fetch(
   //     `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`
