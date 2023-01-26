@@ -1,17 +1,18 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import {
-  getAccessToken,
-  getConnectedRealms,
-} from "./public/blizzardAPIRequest.js";
+import { getRealmListData } from "./public/blizzardAPIRequest.js";
 
 const app = express();
 const port = 3000;
 app.use(cors());
 dotenv.config();
 let accessToken = "";
-
+const params = {
+  client_id: process.env.CLIENT_ID,
+  client_secret: process.env.CLIENT_SECRET,
+  grant_type: process.env.GRANT_TYPE,
+};
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
@@ -20,79 +21,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/realm-list", (req, res) => {
-  /*
-  When this endpoint gets a request it: 
-  - Checks if there is a valid access token
-  - If !accesstoken, get an accesstoken
-  - send get request for all realms to Blizzard API
-  - return data to user 
-  */
-  let accessToken = "";
-  let realmIDs = [];
-  let realmNames = [];
-
-  const hostName = "us.api.blizzard.com";
-  const namespace = "namespace=dynamic-us&locale=en_US";
-  const params = {
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
-    grant_type: process.env.GRANT_TYPE,
-  };
-
-  const options = {
-    method: "POST",
-  };
-
-  fetch(
-    `https://oauth.battle.net/token?client_id=${params.client_id}&client_secret=${params.client_secret}&grant_type=${params.grant_type}`,
-    options
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      accessToken = data.access_token;
-      console.log(accessToken);
-    })
-    .then(() =>
-      fetch(
-        `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`
-      )
-    )
-    .then((response) => response.json())
-    .then((data) => {
-      data.connected_realms.forEach((realmhref) => {
-        realmIDs.push(
-          realmhref.href
-            .replace(
-              "https://us.api.blizzard.com/data/wow/connected-realm/",
-              ""
-            )
-            .replace("?namespace=dynamic-us", "")
-        );
-      });
-      // console.log(realmIDs);
-      // res.json(data);
-    })
-    .then(() => {
-      let realmData = [];
-      realmIDs.forEach((realmID) => {
-        realmData.push(
-          fetch(
-            `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
-          )
-        );
-      });
-
-      // Fetch individual realm info and push to realms array.
-      Promise.all(realmData).then((responses) => {
-        for (const response of responses) {
-          response.json().then((data) => console.log(data.realms[0].name));
-        }
-      });
-    })
-    .catch((error) => {
-      console.error(`ERROR: ${error}`);
-    });
+  const realmListData = getRealmListData(
+    params.client_id,
+    params.client_secret,
+    params.grant_type
+  );
+  res.json(realmListData);
 });
 
 app.listen(port, () => {
