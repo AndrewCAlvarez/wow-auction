@@ -30,26 +30,45 @@ async function getAuctions() {
 
 async function getItemById(itemId) {
   console.log(itemId);
+  let itemData;
   const url = `http://127.0.0.1:3000/api/item?itemid=${itemId}`;
   await fetch(url)
     .then((response) => response.json())
-    .then((data) => console.log(`${data.name}`));
+    .then((data) => {
+      itemData = data;
+    });
+
+  return itemData;
 }
 
+// Creates HTML elements for a single auction listing.
 async function createElementAuctionListing(auction) {
   let container = document.querySelector(".response");
-  let item = await getItemById(auction.item.id);
+  let listingContainer = document.createElement("div");
+  listingContainer.className = "listing-container";
+
   for (const property in auction) {
     if (property == "id" || property == "item") continue;
     let listTitle = document.createElement("h4");
     let listData = document.createElement("p");
     listTitle.textContent = property;
     listData.textContent = auction[property];
-    container.appendChild(listTitle);
-    container.appendChild(listData);
+    listingContainer.appendChild(listTitle);
+    listingContainer.appendChild(listData);
     // console.log(listItem);
   }
-  let listing = document.createElement("p");
-  listing.textContent = auction.id;
-  document.body.appendChild(listing);
+
+  let item = await getItemById(auction.item.id);
+  for (property in item) {
+    if (property == "name" || property == "quality" || property == "level") {
+      let itemTitle = document.createElement("h4");
+      let itemData = document.createElement("p");
+      itemTitle.textContent = property;
+      itemData.textContent = item[property];
+      listingContainer.appendChild(itemTitle);
+      listingContainer.appendChild(itemData);
+    }
+  }
+
+  container.appendChild(listingContainer);
 }

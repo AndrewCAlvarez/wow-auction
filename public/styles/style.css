@@ -1,0 +1,7 @@
+.listing-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: #222;
+  color: #b6b6b6;
+  padding: 1rem;
+}
