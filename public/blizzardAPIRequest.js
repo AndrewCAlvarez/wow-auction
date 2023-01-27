@@ -58,15 +58,19 @@ async function getConnectedRealm(connectedRealmURL) {
   return connectedRealmData;
 }
 
-async function getConnectedRealmAuctionData(realmAuctionURL) {
-  // Returns ALL auctions shared between a group of realms based on the connected realms' URL.
-  const url = `${realmAuctionURL}&access_token=${accessToken}`;
-  await fetch(url)
+async function getRealmIndex(clientID, clientSecret, grant_type) {
+  let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
+  console.log(`Current value of accessToken: ${accessToken}`);
+  const url = `https://${hostName}/data/wow/realm/index?${namespace}&access_token=${accessToken}`;
+  fetch(url)
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((realmList) => {
+      console.log(realmList);
+      return realmList;
+    });
 }
 
-// TODO: This function only gets a small group of realms. Change it so that it returns all realms.
+// TODO: This function only gets a small group of realms. Change it so that it returns all realms. This is for CONNECTED REALMS. There is an api for realms specifically and the app needs to be updated.
 async function getRealmListData(clientID, clientSecret, grant_type) {
   // Returns an array of general data about all realms given a Blizzard-generated client Id, secret and grant type.
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
@@ -82,6 +86,14 @@ async function getRealmListData(clientID, clientSecret, grant_type) {
   // let auctionData = await getAuctionData(connectedRealm.auctions.href);
   return connectedRealm;
   // res.send(connectedRealm);
+}
+
+async function getConnectedRealmAuctionData(realmAuctionURL) {
+  // Returns ALL auctions shared between a group of realms based on the connected realms' URL.
+  const url = `${realmAuctionURL}&access_token=${accessToken}`;
+  await fetch(url)
+    .then((response) => response.json())
+    .then((data) => console.log(data));
 }
 
 // console.log(realmIndex.connected_realm[0]);
@@ -135,4 +147,4 @@ async function getRealmListData(clientID, clientSecret, grant_type) {
 //   console.error(`ERROR: ${error}`);
 // });
 
-export { getRealmListData };
+export { getRealmIndex, getRealmListData };

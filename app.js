@@ -1,7 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { getRealmListData } from "./public/blizzardAPIRequest.js";
+import {
+  getRealmIndex,
+  getRealmListData,
+} from "./public/blizzardAPIRequest.js";
 
 const app = express();
 const port = 3000;
@@ -21,13 +24,19 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/realm-list", (req, res) => {
-  getRealmListData(
-    params.client_id,
-    params.client_secret,
-    params.grant_type
-  ).then((data) => {
-    res.send(data);
-  });
+  // getRealmListData(
+  //   params.client_id,
+  //   params.client_secret,
+  //   params.grant_type
+  // ).then((data) => {
+  //   res.send(data);
+  // });
+
+  getRealmIndex(params.client_id, params.client_secret, params.grant_type).then(
+    (data) => {
+      res.send(data);
+    }
+  );
 });
 
 app.listen(port, () => {
