@@ -1,5 +1,6 @@
-function getRealmIndex() {
-  fetch("http://127.0.0.1:3000/api/realm-index")
+async function getRealmIndex() {
+  const url = "http://127.0.0.1:3000/api/realm-index";
+  await fetch(url)
     .then((response) => response.json())
     .then((realmIndex) => {
       console.log(realmIndex);
@@ -9,9 +10,9 @@ function getRealmIndex() {
     });
 }
 
-function createRealmList() {
-  const realmData = getRealmList();
-  console.log(realmData);
+async function getCommodities() {
+  const url = "http://127.0.0.1:3000/api/commodities";
+  await fetch(url)
+    .then((response) => response.json())
+    .then((data) => console.log(data));
 }
-
-createRealmList();

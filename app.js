@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import {
   getRealmIndex,
+  getCommodities,
   getRealmListData,
 } from "./public/blizzardAPIRequest.js";
 
@@ -30,6 +31,16 @@ app.get("/api/realm-index", (req, res) => {
       res.send(data);
     }
   );
+});
+
+app.get("/api/commodities", (req, res) => {
+  getCommodities(
+    params.client_id,
+    params.client_secret,
+    params.grant_type
+  ).then((data) => {
+    res.send(data);
+  });
 });
 
 app.listen(port, () => {

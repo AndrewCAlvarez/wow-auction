@@ -90,6 +90,21 @@ async function getRealmListData(clientID, clientSecret, grant_type) {
   // res.send(connectedRealm);
 }
 
+async function getCommodities(clientID, clientSecret, grant_type) {
+  let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
+  console.log(`Current value of accessToken: ${accessToken}`);
+  const url = `https://${hostName}/data/wow/auctions/commodities?${namespace}&access_token=${accessToken}`;
+
+  let commodities;
+  await fetch(url)
+    .then((response) => response.json())
+    .then((commoditiesData) => {
+      console.log(commoditiesData);
+      commodities = commoditiesData;
+    });
+  return commodities;
+}
+
 async function getConnectedRealmAuctionData(realmAuctionURL) {
   // Returns ALL auctions shared between a group of realms based on the connected realms' URL.
   const url = `${realmAuctionURL}&access_token=${accessToken}`;
@@ -149,4 +164,4 @@ async function getConnectedRealmAuctionData(realmAuctionURL) {
 //   console.error(`ERROR: ${error}`);
 // });
 
-export { getRealmIndex, getRealmListData };
+export { getRealmIndex, getCommodities, getRealmListData };
