@@ -60,14 +60,16 @@ async function getConnectedRealm(connectedRealmURL) {
 
 async function getRealmIndex(clientID, clientSecret, grant_type) {
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
-  console.log(`Current value of accessToken: ${accessToken}`);
   const url = `https://${hostName}/data/wow/realm/index?${namespace}&access_token=${accessToken}`;
-  fetch(url)
+  let realmIndex;
+
+  await fetch(url)
     .then((response) => response.json())
-    .then((realmList) => {
-      console.log(realmList);
-      return realmList;
+    .then((realmIndexData) => {
+      realmIndex = realmIndexData;
     });
+
+  return realmIndex;
 }
 
 // TODO: This function only gets a small group of realms. Change it so that it returns all realms. This is for CONNECTED REALMS. There is an api for realms specifically and the app needs to be updated.

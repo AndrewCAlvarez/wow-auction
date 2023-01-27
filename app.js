@@ -34,6 +34,7 @@ app.get("/api/realm-list", (req, res) => {
 
   getRealmIndex(params.client_id, params.client_secret, params.grant_type).then(
     (data) => {
+      console.log(data);
       res.send(data);
     }
   );
