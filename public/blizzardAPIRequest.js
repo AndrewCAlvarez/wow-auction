@@ -50,6 +50,13 @@ async function getConnectedRealm(connectedRealmURL) {
   return connectedRealmData;
 }
 
+async function getAuctionData(realmAuctionURL) {
+  const url = `${realmAuctionURL}&access_token=${accessToken}`;
+  await fetch(url)
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+}
+
 // TODO: This function only gets a small group of realms. Change it so that it returns all realms.
 async function getRealmListData(clientID, clientSecret, grant_type) {
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
@@ -61,6 +68,8 @@ async function getRealmListData(clientID, clientSecret, grant_type) {
   let connectedRealm = await getConnectedRealm(
     realmIndex.connected_realms[0].href
   );
+
+  let auctionData = await getAuctionData(connectedRealm.auctions.href);
   return connectedRealm;
   // res.send(connectedRealm);
 }
