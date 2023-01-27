@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import url from "url";
 import {
   getRealmIndex,
   getCommodities,
+  getAuctions,
   getRealmListData,
 } from "./public/blizzardAPIRequest.js";
 
@@ -38,6 +40,18 @@ app.get("/api/commodities", (req, res) => {
     params.client_id,
     params.client_secret,
     params.grant_type
+  ).then((data) => {
+    res.send(data);
+  });
+});
+
+app.get("/api/auctions", (req, res) => {
+  console.log(req.query.realmid);
+  getAuctions(
+    params.client_id,
+    params.client_secret,
+    params.grant_type,
+    req.query.realmid
   ).then((data) => {
     res.send(data);
   });
