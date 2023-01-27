@@ -3,6 +3,7 @@ let realmIDs = [];
 let realmNames = [];
 const hostName = "us.api.blizzard.com";
 const namespace = "namespace=dynamic-us&locale=en_US";
+const namespaceStatic = "namespace=static-us&locale=en_US";
 
 async function getAccessToken(clientID, clientSecret, grantType) {
   // This code in the console is just to add colors to text in nodejs/terminal
@@ -114,10 +115,28 @@ async function getAuctions(clientID, clientSecret, grant_type, realmId) {
   await fetch(url)
     .then((response) => response.json())
     .then((auctionData) => {
-      console.log(auctionData);
+      // console.log(auctionData);
       auctions = auctionData;
     });
   return auctions;
+}
+
+async function getItemById(clientID, clientSecret, grant_type, itemId) {
+  let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
+  console.log(`Current value of accessToken: ${accessToken}`);
+  // I don't know why but the namespace is different for items. Static is used instead.
+  const url = `https://${hostName}/data/wow/item/${1417}?${namespaceStatic}&access_token=${accessToken}`;
+
+  let item;
+
+  await fetch(url)
+    .then((response) => response.json())
+    .then((itemData) => {
+      console.log(itemData);
+      item = itemData;
+    });
+
+  return item;
 }
 
 async function getConnectedRealmAuctionData(realmAuctionURL) {
@@ -179,4 +198,10 @@ async function getConnectedRealmAuctionData(realmAuctionURL) {
 //   console.error(`ERROR: ${error}`);
 // });
 
-export { getRealmIndex, getCommodities, getAuctions, getRealmListData };
+export {
+  getRealmIndex,
+  getCommodities,
+  getAuctions,
+  getItemById,
+  getRealmListData,
+};

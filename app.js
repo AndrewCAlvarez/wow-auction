@@ -6,6 +6,7 @@ import {
   getRealmIndex,
   getCommodities,
   getAuctions,
+  getItemById,
   getRealmListData,
 } from "./public/blizzardAPIRequest.js";
 
@@ -46,7 +47,7 @@ app.get("/api/commodities", (req, res) => {
 });
 
 app.get("/api/auctions", (req, res) => {
-  console.log(req.query.realmid);
+  // console.log(req.query.realmid);
   getAuctions(
     params.client_id,
     params.client_secret,
@@ -55,6 +56,16 @@ app.get("/api/auctions", (req, res) => {
   ).then((data) => {
     res.send(data);
   });
+});
+
+app.get("/api/item", (req, res) => {
+  console.log(req.query.itemid);
+  getItemById(
+    params.client_id,
+    params.client_secret,
+    params.grant_type,
+    req.query.id
+  ).then((data) => res.json(data));
 });
 
 app.listen(port, () => {
