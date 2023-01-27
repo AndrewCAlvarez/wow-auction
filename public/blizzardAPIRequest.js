@@ -33,7 +33,7 @@ async function getConnectedRealmIndex(accessToken) {
 }
 
 async function getConnectedRealm(connectedRealmURL) {
-  // The realms are grouped together. This function returns an object containing information about a set of realms that are grouped together.
+  // A connected realm is a group of individual realm servers. Commodities are sold region-wide across multiple servers. Other items (non-stackables for instance) are still server-specific.
   let connectedRealmData;
 
   console.log(
@@ -43,19 +43,21 @@ async function getConnectedRealm(connectedRealmURL) {
   await fetch(`${connectedRealmURL}&access_token=${accessToken}`)
     .then((response) => response.json())
     .then((data) => {
-      // console.log(`REALM DATA: ${data}`);
+      console.log(data);
       connectedRealmData = data;
     });
 
   return connectedRealmData;
 }
 
+// TODO: This function only gets a small group of realms. Change it so that it returns all realms.
 async function getRealmListData(clientID, clientSecret, grant_type) {
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
   console.log(`Current value of accessToken: ${accessToken}`);
 
   // Realm index is an array of objects containing only one value: url for each realm.
   const realmIndex = await getConnectedRealmIndex(accessToken);
+
   let connectedRealm = await getConnectedRealm(
     realmIndex.connected_realms[0].href
   );
