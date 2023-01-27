@@ -60,56 +60,58 @@ async function getRealmListData(clientID, clientSecret, grant_type) {
     realmIndex.connected_realms[0].href
   );
   return connectedRealm;
-  // console.log(realmIndex.connected_realm[0]);
-  // console.log(getConnectedRealm(realmIndex[2]));
-  // .then(() =>
-  //   fetch(
-  //     `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`
-  //   )
-  // )
-  // .then((response) => response.json())
-  // .then((data) => {
-  //   data.connected_realms.forEach((realmhref) => {
-  //     realmIDs.push(
-  //       realmhref.href
-  //         .replace(
-  //           "https://us.api.blizzard.com/data/wow/connected-realm/",
-  //           ""
-  //         )
-  //         .replace("?namespace=dynamic-us", "")
-  //     );
-  //   });
-  //   // console.log(realmIDs);
-  //   // res.json(data);
-  // })
-  // .then(() => {
-  //   let realmData = [];
-  //   realmIDs.forEach((realmID) => {
-  //     realmData.push(
-  //       fetch(
-  //         `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
-  //       )
-  //     );
-  //   });
-
-  //   // Fetch individual realm info and push to realms array.
-  //   Promise.all(realmData).then((responses) => {
-  //     for (const response of responses) {
-  //       if (response.status === 200) {
-  //         response
-  //           .json()
-  //           .then((data) => {
-  //             realmNames.push(data.realms[0].name);
-  //             // The realmNames array is being populated, but I'm having trouble sending it to the frontend. I think it's an issue of misunderstanding promises.
-  //           })
-  //           .then(console.log(`FINAL REALM LIST: \n${realmNames}`));
-  //       }
-  //     }
-  //   });
-  // })
-  // .catch((error) => {
-  //   console.error(`ERROR: ${error}`);
-  // });
+  // res.send(connectedRealm);
 }
+
+// console.log(realmIndex.connected_realm[0]);
+// console.log(getConnectedRealm(realmIndex[2]));
+// .then(() =>
+//   fetch(
+//     `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`
+//   )
+// )
+// .then((response) => response.json())
+// .then((data) => {
+//   data.connected_realms.forEach((realmhref) => {
+//     realmIDs.push(
+//       realmhref.href
+//         .replace(
+//           "https://us.api.blizzard.com/data/wow/connected-realm/",
+//           ""
+//         )
+//         .replace("?namespace=dynamic-us", "")
+//     );
+//   });
+//   // console.log(realmIDs);
+//   // res.json(data);
+// })
+// .then(() => {
+//   let realmData = [];
+//   realmIDs.forEach((realmID) => {
+//     realmData.push(
+//       fetch(
+//         `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
+//       )
+//     );
+//   });
+
+//   // Fetch individual realm info and push to realms array.
+//   Promise.all(realmData).then((responses) => {
+//     for (const response of responses) {
+//       if (response.status === 200) {
+//         response
+//           .json()
+//           .then((data) => {
+//             realmNames.push(data.realms[0].name);
+//             // The realmNames array is being populated, but I'm having trouble sending it to the frontend. I think it's an issue of misunderstanding promises.
+//           })
+//           .then(console.log(`FINAL REALM LIST: \n${realmNames}`));
+//       }
+//     }
+//   });
+// })
+// .catch((error) => {
+//   console.error(`ERROR: ${error}`);
+// });
 
 export { getRealmListData };

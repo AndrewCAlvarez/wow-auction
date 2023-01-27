@@ -21,12 +21,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/realm-list", (req, res) => {
-  const realmListData = getRealmListData(
+  getRealmListData(
     params.client_id,
     params.client_secret,
     params.grant_type
-  );
-  res.send(realmListData);
+  ).then((data) => {
+    res.send(data);
+  });
 });
 
 app.listen(port, () => {
