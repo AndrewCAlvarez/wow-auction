@@ -26,7 +26,7 @@ app.get("/api/realm-list", (req, res) => {
     params.client_secret,
     params.grant_type
   );
-  res.json(realmListData);
+  res.send(realmListData);
 });
 
 app.listen(port, () => {
