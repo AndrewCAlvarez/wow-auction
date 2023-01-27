@@ -1,15 +1,11 @@
-function getRealmList() {
-  fetch("http://127.0.0.1:3000/api/realm-list")
+function getRealmIndex() {
+  fetch("http://127.0.0.1:3000/api/realm-index")
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      // console.log(data.realms[0].name.en_US);
-      // data.realms.forEach((realm) => {
-      //   console.log(realm.name.en_US);
-      //   let para = document.createElement("p");
-      //   para.textContent = realm.name.en_US;
-      //   document.body.appendChild(para);
-      // });
+    .then((realmIndex) => {
+      console.log(realmIndex);
+      realmIndex.realms.forEach((realm) => {
+        console.log(realm.name);
+      });
     });
 }
 

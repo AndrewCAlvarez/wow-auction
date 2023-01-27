@@ -23,15 +23,7 @@ app.get("/", (req, res) => {
   // res.send("./index.html");
 });
 
-app.get("/api/realm-list", (req, res) => {
-  // getRealmListData(
-  //   params.client_id,
-  //   params.client_secret,
-  //   params.grant_type
-  // ).then((data) => {
-  //   res.send(data);
-  // });
-
+app.get("/api/realm-index", (req, res) => {
   getRealmIndex(params.client_id, params.client_secret, params.grant_type).then(
     (data) => {
       console.log(data);
