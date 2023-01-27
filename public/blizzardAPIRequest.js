@@ -5,6 +5,9 @@ const hostName = "us.api.blizzard.com";
 const namespace = "namespace=dynamic-us&locale=en_US";
 
 async function getAccessToken(clientID, clientSecret, grantType) {
+  // This code in the console is just to add colors to text in nodejs/terminal
+  console.log("\x1b[33m%s\x1b[0m", "FUNCTION CALL: getAccessToken");
+
   const options = {
     method: "POST",
   };
@@ -20,12 +23,15 @@ async function getAccessToken(clientID, clientSecret, grantType) {
 }
 
 async function getConnectedRealmIndex(accessToken) {
+  // This code in the console is just to add colors to text in nodejs/terminal
+  console.log("\x1b[33m%s\x1b[0m", "FUNCTION CALL: getConnectedRealmIndex");
   let realmIndexData;
   const realmIndexURL = `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`;
 
   await fetch(realmIndexURL)
     .then((response) => response.json())
     .then((data) => {
+      console.log(realmIndexData);
       realmIndexData = data;
     });
 
@@ -35,6 +41,8 @@ async function getConnectedRealmIndex(accessToken) {
 async function getConnectedRealm(connectedRealmURL) {
   // A connected realm is a group of individual realm servers. Commodities are sold region-wide across multiple servers. Other items (non-stackables for instance) are still server-specific.
   let connectedRealmData;
+  // This code in the console is just to add colors to text in nodejs/terminal
+  console.log("\x1b[33m%s\x1b[0m", "FUNCTION CALL: getConnectedRealm");
 
   console.log(
     `Attempting to get data from: ${connectedRealmURL}&access_token=${accessToken}`
@@ -43,14 +51,15 @@ async function getConnectedRealm(connectedRealmURL) {
   await fetch(`${connectedRealmURL}&access_token=${accessToken}`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       connectedRealmData = data;
     });
 
   return connectedRealmData;
 }
 
-async function getAuctionData(realmAuctionURL) {
+async function getConnectedRealmAuctionData(realmAuctionURL) {
+  // Returns ALL auctions shared between a group of realms based on the connected realms' URL.
   const url = `${realmAuctionURL}&access_token=${accessToken}`;
   await fetch(url)
     .then((response) => response.json())
@@ -59,17 +68,18 @@ async function getAuctionData(realmAuctionURL) {
 
 // TODO: This function only gets a small group of realms. Change it so that it returns all realms.
 async function getRealmListData(clientID, clientSecret, grant_type) {
+  // Returns an array of general data about all realms given a Blizzard-generated client Id, secret and grant type.
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
   console.log(`Current value of accessToken: ${accessToken}`);
 
-  // Realm index is an array of objects containing only one value: url for each realm.
+  // Realm index is an array of objects containing only one value: href for each group of connected realms.
   const realmIndex = await getConnectedRealmIndex(accessToken);
 
   let connectedRealm = await getConnectedRealm(
     realmIndex.connected_realms[0].href
   );
 
-  let auctionData = await getAuctionData(connectedRealm.auctions.href);
+  // let auctionData = await getAuctionData(connectedRealm.auctions.href);
   return connectedRealm;
   // res.send(connectedRealm);
 }
