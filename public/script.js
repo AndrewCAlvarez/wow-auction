@@ -5,7 +5,13 @@ async function getRealmIndex() {
     .then((realmIndex) => {
       console.log(realmIndex);
       realmIndex.realms.forEach((realm) => {
-        console.log(realm.name);
+        console.log(realm.id);
+        let realmIndexSelectElement =
+          document.querySelector(".realmIndexSelect");
+        let realmIndexOptionElement = document.createElement("option");
+        realmIndexOptionElement.value = realm.id;
+        realmIndexOptionElement.textContent = realm.name;
+        realmIndexSelectElement.appendChild(realmIndexOptionElement);
       });
     });
 }
@@ -17,8 +23,9 @@ async function getCommodities() {
     .then((data) => console.log(data));
 }
 
-async function getAuctions() {
-  const url = "http://127.0.0.1:3000/api/auctions?realmid=54";
+async function getAuctions(realmid) {
+  realmid = 54;
+  const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmid}`;
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {

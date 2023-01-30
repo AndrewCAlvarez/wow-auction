@@ -20,6 +20,7 @@ const params = {
   client_secret: process.env.CLIENT_SECRET,
   grant_type: process.env.GRANT_TYPE,
 };
+
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
