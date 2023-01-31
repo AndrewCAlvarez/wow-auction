@@ -8,8 +8,18 @@ async function getRealmIndex() {
     .then((response) => response.json())
     .then((realmIndex) => {
       console.log(realmIndex);
+      let realmIndexArray = [];
       realmIndex.realms.forEach((realm) => {
-        console.log(realm.name);
+        let realmData = {
+          name: realm.name,
+          id: realm.id,
+        };
+        realmIndexArray.push(realmData);
+      });
+      console.log(realmIndexArray);
+
+      realmIndex.realms.forEach((realm) => {
+        // console.log(realm.name);
         // Create dropdown list to select realm by name
         console.log(!document.querySelector(`#realm${realm.id}`));
         if (!document.querySelector(`#realm${realm.id}`)) {
@@ -34,7 +44,7 @@ async function getCommodities() {
 
 async function getAuctions() {
   let realmid = document.querySelector(".realmIndexSelect").value;
-  console.log(realmid);
+  console.log("Realm id selected: " + realmid);
   const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmid}`;
   await fetch(url)
     .then((response) => response.json())
