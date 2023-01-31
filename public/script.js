@@ -1,3 +1,7 @@
+window.addEventListener("load", (event) => {
+  getRealmIndex();
+});
+
 async function getRealmIndex() {
   const url = "http://127.0.0.1:3000/api/realm-index";
   await fetch(url)
@@ -5,13 +9,18 @@ async function getRealmIndex() {
     .then((realmIndex) => {
       console.log(realmIndex);
       realmIndex.realms.forEach((realm) => {
-        console.log(realm.id);
-        let realmIndexSelectElement =
-          document.querySelector(".realmIndexSelect");
-        let realmIndexOptionElement = document.createElement("option");
-        realmIndexOptionElement.value = realm.id;
-        realmIndexOptionElement.textContent = realm.name;
-        realmIndexSelectElement.appendChild(realmIndexOptionElement);
+        console.log(realm.name);
+        // Create dropdown list to select realm by name
+        console.log(!document.querySelector(`#realm${realm.id}`));
+        if (!document.querySelector(`#realm${realm.id}`)) {
+          let realmIndexSelectElement =
+            document.querySelector(".realmIndexSelect");
+          let realmIndexOptionElement = document.createElement("option");
+          realmIndexOptionElement.id = "realm" + realm.id;
+          realmIndexOptionElement.value = realm.id;
+          realmIndexOptionElement.textContent = realm.name;
+          realmIndexSelectElement.appendChild(realmIndexOptionElement);
+        }
       });
     });
 }
@@ -23,15 +32,16 @@ async function getCommodities() {
     .then((data) => console.log(data));
 }
 
-async function getAuctions(realmid) {
-  realmid = 54;
+async function getAuctions() {
+  let realmid = document.querySelector(".realmIndexSelect").value;
+  console.log(realmid);
   const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmid}`;
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      // console.log(data);
-      console.log(data.auctions[0]);
-      createElementAuctionListing(data.auctions[0]);
+      console.log(data);
+      // console.log(data.auctions[0]);
+      // createElementAuctionListing(data.auctions[0]);
     });
 }
 
