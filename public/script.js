@@ -1,5 +1,5 @@
 window.addEventListener("load", (event) => {
-  getRealmIndex();
+  getConnectedRealmIndex();
 });
 
 async function loadAuctionHouse() {
@@ -40,6 +40,18 @@ async function getRealmIndex() {
         }
       });
     });
+}
+
+async function getConnectedRealmIndex() {
+  // INDEX
+  // https://us.api.blizzard.com/data/wow/connected-realm/index?namespace=dynamic-us&locale=en_US&access_token=USIgB8vV4o1fqpk8iQAeFv3yqdXFbbcz5q
+  // REALM
+  // https://us.api.blizzard.com/data/wow/connected-realm/61?namespace=dynamic-us&locale=en_US&access_token=USIgB8vV4o1fqpk8iQAeFv3yqdXFbbcz5q
+  console.log("FETCHING CONNECTED REALM INDEX FROM NODEJS APPLICATION");
+  const connectedRealmIndexURL = `http://127.0.0.1:3000/api/connected-realm/index`;
+  await fetch(connectedRealmIndexURL)
+    .then((response) => response.json())
+    .then((data) => console.log(data));
 }
 
 async function getCommodities() {

@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import url from "url";
 import {
+  getAccessToken,
+  getConnectedRealmIndex,
+  getConnectedRealm,
   getRealmIndex,
   getCommodities,
   getAuctions,
@@ -35,6 +38,24 @@ app.get("/api/realm-index", (req, res) => {
       res.send(data);
     }
   );
+});
+
+app.get("/api/connected-realm/index", (req, res) => {
+  let connectedRealms;
+
+  getConnectedRealmIndex(
+    params.client_id,
+    params.client_secret,
+    params.grant_type
+  ).then((data) => {
+    //For each entry fetch the data of that connected realm by id, then add the data to the connectedRealms variable.
+    // console.log(data);
+    data.connected_realms.forEach((connectedRealm) => {
+      // Need to work with JSON and adding things into it here.
+      getConnectedRealm(connectedRealm.href);
+    });
+    // res.json("Connected Realms endpoint");
+  });
 });
 
 app.get("/api/commodities", (req, res) => {

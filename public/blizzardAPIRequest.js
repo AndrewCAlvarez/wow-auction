@@ -23,17 +23,20 @@ async function getAccessToken(clientID, clientSecret, grantType) {
   return accessToken;
 }
 
-async function getConnectedRealmIndex(accessToken) {
+async function getConnectedRealmIndex(clientID, clientSecret, grantType) {
+  let realmIndexData;
+  let accessToken = await getAccessToken(clientID, clientSecret, grantType);
+  const realmIndexURL = `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`;
+
   // This code in the console is just to add colors to text in nodejs/terminal
   console.log("\x1b[33m%s\x1b[0m", "FUNCTION CALL: getConnectedRealmIndex");
-  let realmIndexData;
-  const realmIndexURL = `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`;
+  console.log("\x1b[33m%s\x1b[0m", `ACCESS TOKEN: ${accessToken}`);
 
   await fetch(realmIndexURL)
     .then((response) => response.json())
     .then((data) => {
-      console.log("connected realm index" + realmIndexData);
       realmIndexData = data;
+      // console.log("connected realm index: " + realmIndexData);
     });
 
   return realmIndexData;
@@ -199,6 +202,9 @@ async function getConnectedRealmAuctionData(realmAuctionURL) {
 // });
 
 export {
+  getAccessToken,
+  getConnectedRealmIndex,
+  getConnectedRealm,
   getRealmIndex,
   getCommodities,
   getAuctions,
