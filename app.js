@@ -6,6 +6,7 @@ import {
   getAccessToken,
   getConnectedRealmIndex,
   getConnectedRealm,
+  createConnectedRealmArray,
   getRealmIndex,
   getCommodities,
   getAuctions,
@@ -41,20 +42,12 @@ app.get("/api/realm-index", (req, res) => {
 });
 
 app.get("/api/connected-realm/index", (req, res) => {
-  let connectedRealms;
-
-  getConnectedRealmIndex(
+  createConnectedRealmArray(
     params.client_id,
     params.client_secret,
     params.grant_type
   ).then((data) => {
-    //For each entry fetch the data of that connected realm by id, then add the data to the connectedRealms variable.
-    // console.log(data);
-    data.connected_realms.forEach((connectedRealm) => {
-      // Need to work with JSON and adding things into it here.
-      getConnectedRealm(connectedRealm.href);
-    });
-    // res.json("Connected Realms endpoint");
+    res.send(data);
   });
 });
 

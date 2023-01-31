@@ -46,11 +46,11 @@ async function getConnectedRealm(connectedRealmURL) {
   // A connected realm is a group of individual realm servers. Commodities are sold region-wide across multiple servers. Other items (non-stackables for instance) are still server-specific.
   let connectedRealmData;
   // This code in the console is just to add colors to text in nodejs/terminal
-  console.log("\x1b[33m%s\x1b[0m", "FUNCTION CALL: getConnectedRealm");
+  // console.log("\x1b[33m%s\x1b[0m", "FUNCTION CALL: getConnectedRealm");
 
-  console.log(
-    `Attempting to get data from: ${connectedRealmURL}&access_token=${accessToken}`
-  );
+  // console.log(
+  //   `Attempting to get data from: ${connectedRealmURL}&access_token=${accessToken}`
+  // );
 
   await fetch(`${connectedRealmURL}&access_token=${accessToken}`)
     .then((response) => response.json())
@@ -58,6 +58,25 @@ async function getConnectedRealm(connectedRealmURL) {
       // console.log(data);
       connectedRealmData = data;
     });
+
+  return connectedRealmData;
+}
+
+async function createConnectedRealmArray(clientID, clientSecret, grantType) {
+  let connectedRealmIndex = await getConnectedRealmIndex(
+    clientID,
+    clientSecret,
+    grantType
+  );
+  let connectedRealmDataArray = [];
+  let connectedRealmData;
+  await connectedRealmIndex.connected_realms.forEach((connectedRealm) => {
+    connectedRealmDataArray.push(getConnectedRealm(connectedRealm.href));
+  });
+  await Promise.all(connectedRealmDataArray).then((values) => {
+    // console.log(values);
+    connectedRealmData = values;
+  });
 
   return connectedRealmData;
 }
@@ -204,6 +223,7 @@ async function getConnectedRealmAuctionData(realmAuctionURL) {
 export {
   getAccessToken,
   getConnectedRealmIndex,
+  createConnectedRealmArray,
   getConnectedRealm,
   getRealmIndex,
   getCommodities,
