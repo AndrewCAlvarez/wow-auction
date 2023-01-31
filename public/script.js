@@ -2,6 +2,13 @@ window.addEventListener("load", (event) => {
   getRealmIndex();
 });
 
+async function loadAuctionHouse() {
+  let realmId = document.querySelector(".realmIndexSelect").value;
+  console.log(realmId);
+  // await getCommodities();
+  await getAuctions(realmId);
+}
+
 async function getRealmIndex() {
   const url = "http://127.0.0.1:3000/api/realm-index";
   await fetch(url)
@@ -18,7 +25,7 @@ async function getRealmIndex() {
       });
       console.log(realmIndexArray);
 
-      realmIndex.realms.forEach((realm) => {
+      realmIndexArray.forEach((realm) => {
         // console.log(realm.name);
         // Create dropdown list to select realm by name
         console.log(!document.querySelector(`#realm${realm.id}`));
@@ -42,10 +49,11 @@ async function getCommodities() {
     .then((data) => console.log(data));
 }
 
-async function getAuctions() {
-  let realmid = document.querySelector(".realmIndexSelect").value;
-  console.log("Realm id selected: " + realmid);
-  const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmid}`;
+async function getAuctions(realmId) {
+  // let realmid = document.querySelector(".realmIndexSelect").value;
+
+  console.log("Realm id selected: " + realmId);
+  const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmId}`;
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {

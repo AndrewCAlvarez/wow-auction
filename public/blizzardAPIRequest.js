@@ -32,7 +32,7 @@ async function getConnectedRealmIndex(accessToken) {
   await fetch(realmIndexURL)
     .then((response) => response.json())
     .then((data) => {
-      console.log(realmIndexData);
+      console.log("connected realm index" + realmIndexData);
       realmIndexData = data;
     });
 

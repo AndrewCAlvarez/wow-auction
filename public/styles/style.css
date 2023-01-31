@@ -12,4 +12,15 @@
   color: #e5e5e5;
   height: 2rem;
   text-align: center;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+button {
+  border: none;
+  background-color: #433d31;
+  color: #e5e5e5;
+  height: 2rem;
+  text-align: center;
+  cursor: pointer;
 }
