@@ -1,6 +1,40 @@
+let state = {
+  connectedRealmData: [],
+};
+
 window.addEventListener("load", (event) => {
-  getConnectedRealmIndex();
+  getConnectedRealmIndex().then((connectedRealmList) => {
+    state.connectedRealmData = connectedRealmList;
+    // console.log(
+    //   "Realm name: " + state.connectedRealmData[0].realms[0].name.en_US
+    // );
+    // console.log("Realm id: " + state.connectedRealmData[1].id);
+    // console.log(state.connectedRealmData[0].id);
+    let realmIndexSelectElement = document.querySelector(".realmIndexSelect");
+    state.connectedRealmData.forEach((connectedRealm) => {
+      // console.log(connectedRealm);
+      // console.log(connectedRealm.realms);
+      connectedRealm.realms.forEach((realm) => {
+        // console.log(realm);
+        console.log(realm.name.en_US);
+        // console.log(realm.connected_realm.id);
+        console.log(connectedRealm.id);
+        // console.log(!document.querySelector(`#realm${realm.id}`));
+        // if (!document.querySelector(`#realm${realm.id}`)) {
+        let realmIndexOptionElement = document.createElement("option");
+        realmIndexOptionElement.id = "realm" + connectedRealm.id;
+        realmIndexOptionElement.value = connectedRealm.id;
+        realmIndexOptionElement.textContent = realm.name.en_US;
+        realmIndexSelectElement.appendChild(realmIndexOptionElement);
+        // }
+      });
+    });
+
+    loadRealmSelectElement(connectedRealmList);
+  });
 });
+
+function loadRealmSelectElement(connectedRealmList) {}
 
 async function loadAuctionHouse() {
   let realmId = document.querySelector(".realmIndexSelect").value;
@@ -43,15 +77,16 @@ async function getRealmIndex() {
 }
 
 async function getConnectedRealmIndex() {
-  // INDEX
-  // https://us.api.blizzard.com/data/wow/connected-realm/index?namespace=dynamic-us&locale=en_US&access_token=USIgB8vV4o1fqpk8iQAeFv3yqdXFbbcz5q
-  // REALM
-  // https://us.api.blizzard.com/data/wow/connected-realm/61?namespace=dynamic-us&locale=en_US&access_token=USIgB8vV4o1fqpk8iQAeFv3yqdXFbbcz5q
   console.log("FETCHING CONNECTED REALM INDEX FROM NODEJS APPLICATION");
   const connectedRealmIndexURL = `http://127.0.0.1:3000/api/connected-realm/index`;
+  let realmList;
   await fetch(connectedRealmIndexURL)
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      realmList = data;
+    });
+
+  return realmList;
 }
 
 async function getCommodities() {
