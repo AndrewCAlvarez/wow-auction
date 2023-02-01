@@ -41,3 +41,9 @@ button {
   grid-template-columns: repeat(6, 1fr);
   border-bottom: 1px solid black;
 }
+
+.listingContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column: 1 /-1;
+}

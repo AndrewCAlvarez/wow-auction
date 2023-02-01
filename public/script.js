@@ -9,6 +9,16 @@ window.addEventListener("load", (event) => {
   });
 });
 
+function clearAuctionTable() {
+  let auctionTable = document.querySelectorAll(".listingContainer");
+  console.log(auctionTable);
+  auctionTable.forEach((listing) => {
+    if (listing.parentNode) {
+      listing.parentNode.removeChild(listing);
+    }
+  });
+}
+
 function loadRealmSelectElement() {
   let realmIndexSelectElement = document.querySelector(".realmIndexSelect");
   state.connectedRealmData.forEach((connectedRealm) => {
@@ -131,7 +141,9 @@ async function generateAuctionTableListing(auction) {
   console.log(itemMedia);
   // console.log("auction id logged: " + auction.id);
   // console.log("itemData id logged: " + itemData.name);
-  let listingContainer = document.querySelector(".auctionTableListContainer");
+  let auctionTable = document.querySelector(".auctionTableListContainer");
+  let listingContainer = document.createElement("div");
+  listingContainer.className = "listingContainer";
   let icon = document.createElement("img");
   let name = document.createElement("p");
   let duration = document.createElement("p");
@@ -152,6 +164,7 @@ async function generateAuctionTableListing(auction) {
   listingContainer.appendChild(quantity);
   listingContainer.appendChild(bid);
   listingContainer.appendChild(buyout);
+  auctionTable.appendChild(listingContainer);
 }
 
 async function getItemById(itemId) {
