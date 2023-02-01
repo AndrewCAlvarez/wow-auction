@@ -74,7 +74,12 @@ async function getCommodities() {
   const url = "http://127.0.0.1:3000/api/commodities";
   await fetch(url)
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      console.log(data);
+      for (let index = 0; index < 100; index++) {
+        generateAuctionTableListing(data.auctions[index]);
+      }
+    });
 }
 
 async function getAuctions() {
