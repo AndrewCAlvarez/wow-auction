@@ -15,9 +15,24 @@
     <button onclick="getCommodities()">Get Region Commodities</button>
     <button onclick="getAuctions()">Get Auctions</button>
     <h1>Select Realm</h1>
-    <select name="realmIndex" class="realmIndexSelect"></select>
+    <section style="display: flex; gap: 1rem">
+      <select name="realmIndex" class="realmIndexSelect"></select>
+      <button onclick="loadAuctionHouse()">Load Auction House</button>
+      <button onclick="generateAuctionTableListing()">
+        Load sample auction listing
+      </button>
+    </section>
     <div class="response"></div>
-    <button onclick="loadAuctionHouse()">Load Auction House</button>
+    <section class="auctionTableListContainer">
+      <div class="auctionTableHeader">
+        <div>Icon</div>
+        <div>Name</div>
+        <div>Duration</div>
+        <div>Quantity</div>
+        <div>Bid</div>
+        <div>Buyout</div>
+      </div>
+    </section>
     <script src="./script.js"></script>
   </body>
 </html>

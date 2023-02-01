@@ -5,40 +5,28 @@ let state = {
 window.addEventListener("load", (event) => {
   getConnectedRealmIndex().then((connectedRealmList) => {
     state.connectedRealmData = connectedRealmList;
-    // console.log(
-    //   "Realm name: " + state.connectedRealmData[0].realms[0].name.en_US
-    // );
-    // console.log("Realm id: " + state.connectedRealmData[1].id);
-    // console.log(state.connectedRealmData[0].id);
-    let realmIndexSelectElement = document.querySelector(".realmIndexSelect");
-    state.connectedRealmData.forEach((connectedRealm) => {
-      // console.log(connectedRealm);
-      // console.log(connectedRealm.realms);
-      connectedRealm.realms.forEach((realm) => {
-        // console.log(realm);
-        console.log(realm.name.en_US);
-        // console.log(realm.connected_realm.id);
-        console.log(connectedRealm.id);
-        // console.log(!document.querySelector(`#realm${realm.id}`));
-        // if (!document.querySelector(`#realm${realm.id}`)) {
+    loadRealmSelectElement();
+  });
+});
+
+function loadRealmSelectElement() {
+  let realmIndexSelectElement = document.querySelector(".realmIndexSelect");
+  state.connectedRealmData.forEach((connectedRealm) => {
+    connectedRealm.realms.forEach((realm) => {
+      if (!document.querySelector(`#realm${connectedRealm.id}`)) {
         let realmIndexOptionElement = document.createElement("option");
         realmIndexOptionElement.id = "realm" + connectedRealm.id;
         realmIndexOptionElement.value = connectedRealm.id;
         realmIndexOptionElement.textContent = realm.name.en_US;
         realmIndexSelectElement.appendChild(realmIndexOptionElement);
-        // }
-      });
+      }
     });
-
-    loadRealmSelectElement(connectedRealmList);
   });
-});
-
-function loadRealmSelectElement(connectedRealmList) {}
+}
 
 async function loadAuctionHouse() {
   let realmId = document.querySelector(".realmIndexSelect").value;
-  console.log(realmId);
+  // console.log(realmId);
   // await getCommodities();
   await getAuctions(realmId);
 }
@@ -97,21 +85,77 @@ async function getCommodities() {
 }
 
 async function getAuctions(realmId) {
-  // let realmid = document.querySelector(".realmIndexSelect").value;
-
-  console.log("Realm id selected: " + realmId);
+  // console.log("Realm id selected: " + realmId);
+  console.log("Getting Auctions...\n");
   const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmId}`;
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
+      for (let index = 100; index < 120; index++) {
+        generateAuctionTableListing(data.auctions[index]);
+      }
+      data.auctions.forEach((auction) => {
+        // Doing this makes too many requests and takes forever to load.
+        // generateAuctionTableListing(auction);
+      });
       // console.log(data.auctions[0]);
       // createElementAuctionListing(data.auctions[0]);
     });
 }
 
+function generateAuctionTableListing(auction) {
+  // auction = {
+  //   id: 669294874,
+  //   item: {
+  //     id: 93551,
+  //     bonus_lists: [7178],
+  //     modifiers: [
+  //       {
+  //         type: 9,
+  //         value: 35,
+  //       },
+  //       {
+  //         type: 28,
+  //         value: 860,
+  //       },
+  //     ],
+  //   },
+  //   buyout: 49990000,
+  //   quantity: 1,
+  //   time_left: "LONG",
+  // };
+  // console.log(await getItemById(auction.item.id));
+  // let itemData = await getItemById(auction.item.id);
+  getItemById(auction.item.id).then((itemData) => {
+    console.log("auction id logged: " + auction.id);
+    console.log("itemData id logged: " + itemData.id);
+    let listingContainer = document.querySelector(".auctionTableListContainer");
+    let icon = document.createElement("p");
+    let name = document.createElement("p");
+    let duration = document.createElement("p");
+    let quantity = document.createElement("p");
+    let bid = document.createElement("p");
+    let buyout = document.createElement("p");
+
+    icon.textContent = "ICON";
+    name.textContent = itemData.name;
+    duration.textContent = auction.time_left;
+    quantity.textContent = auction.quantity;
+    bid.textContent = !auction.bid ? auction.bid : "";
+    buyout.textContent = auction.buyout;
+
+    listingContainer.appendChild(icon);
+    listingContainer.appendChild(name);
+    listingContainer.appendChild(duration);
+    listingContainer.appendChild(quantity);
+    listingContainer.appendChild(bid);
+    listingContainer.appendChild(buyout);
+  });
+}
+
 async function getItemById(itemId) {
-  console.log(itemId);
+  // console.log(itemId);
   let itemData;
   const url = `http://127.0.0.1:3000/api/item?itemid=${itemId}`;
   await fetch(url)

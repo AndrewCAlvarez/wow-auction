@@ -24,3 +24,20 @@ button {
   text-align: center;
   cursor: pointer;
 }
+
+.auctionTableListContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.auctionTableHeader {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column: 1 / -1;
+}
+
+.auctionListingContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid black;
+}
