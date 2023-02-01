@@ -1,12 +1,14 @@
 ----- GOALS -----
-- Squash bugs
+X - Squash bugs
 - Alphabetize realm select dropdown element
 - Load commodities 
 - Load item media for listings
 - Convert price to gold, silver & copper
+- Prevent duplicate listing on multiple searches
+- Refresh table on search
 ----- BUGS -----
 
-- Function getAuctions returns same name for every item.
+
 --------------------------------------------------------------
 
 ----- FEATURES -----

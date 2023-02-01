@@ -162,6 +162,21 @@ async function getItemById(clientID, clientSecret, grant_type, itemId) {
   return item;
 }
 
+async function getItemMedia(clientID, clientSecret, grant_type, itemId) {
+  // https://us.api.blizzard.com/data/wow/media/item/19019?namespace=static-us&locale=en_US&access_token=US9BXh300LGvJx4hGvFB5sff6oqixxsKey
+  const url = `https://${hostName}/data/wow/media/item/${itemId}?${namespaceStatic}&access_token=${accessToken}`;
+  let itemMedia;
+
+  await fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      itemMedia = data;
+    });
+
+  return itemMedia;
+}
+
 async function getConnectedRealmAuctionData(realmAuctionURL) {
   // Returns ALL auctions shared between a group of realms based on the connected realms' URL.
   const url = `${realmAuctionURL}&access_token=${accessToken}`;
@@ -231,4 +246,5 @@ export {
   getAuctions,
   getItemById,
   getRealmListData,
+  getItemMedia,
 };

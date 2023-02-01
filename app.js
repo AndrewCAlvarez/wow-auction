@@ -11,6 +11,7 @@ import {
   getCommodities,
   getAuctions,
   getItemById,
+  getItemMedia,
   getRealmListData,
 } from "./public/blizzardAPIRequest.js";
 
@@ -76,6 +77,16 @@ app.get("/api/auctions", (req, res) => {
 app.get("/api/item", (req, res) => {
   // console.log("REQUEST ITEM ID: " + req.query.itemid);
   getItemById(
+    params.client_id,
+    params.client_secret,
+    params.grant_type,
+    req.query.itemid
+  ).then((data) => res.send(data));
+});
+
+app.get("/api/data/media/item", (req, res) => {
+  // console.log("REQUEST ITEM ID: " + req.query.itemid);
+  getItemMedia(
     params.client_id,
     params.client_secret,
     params.grant_type,

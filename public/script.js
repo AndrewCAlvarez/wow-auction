@@ -91,7 +91,7 @@ async function getAuctions() {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      for (let index = 0; index < 100; index++) {
+      for (let index = 0; index < 5; index++) {
         generateAuctionTableListing(data.auctions[index]);
       }
       data.auctions.forEach((auction) => {
@@ -127,17 +127,19 @@ async function generateAuctionTableListing(auction) {
   // console.log(await getItemById(auction.item.id));
 
   let itemData = await getItemById(auction.item.id);
+  let itemMedia = await getItemMedia(auction.item.id);
+  console.log(itemMedia);
   // console.log("auction id logged: " + auction.id);
   // console.log("itemData id logged: " + itemData.name);
   let listingContainer = document.querySelector(".auctionTableListContainer");
-  let icon = document.createElement("p");
+  let icon = document.createElement("img");
   let name = document.createElement("p");
   let duration = document.createElement("p");
   let quantity = document.createElement("p");
   let bid = document.createElement("p");
   let buyout = document.createElement("p");
 
-  icon.textContent = "ICON";
+  icon.setAttribute("src", itemMedia.assets[0].value);
   name.textContent = itemData.name;
   duration.textContent = auction.time_left;
   quantity.textContent = auction.quantity;
@@ -153,17 +155,28 @@ async function generateAuctionTableListing(auction) {
 }
 
 async function getItemById(itemId) {
-  console.log(itemId);
   let itemData;
   const url = `http://127.0.0.1:3000/api/item?itemid=${itemId}`;
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      console.log("getItemById: " + data.name);
       itemData = data;
     });
 
   return itemData;
+}
+
+async function getItemMedia(itemId) {
+  const url = `http://127.0.0.1:3000/api/data/media/item?itemid=${itemId}`;
+  let itemMedia;
+  await fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Item media data: " + data);
+      itemMedia = data;
+    });
+
+  return itemMedia;
 }
 
 // Creates HTML elements for a single auction listing.
