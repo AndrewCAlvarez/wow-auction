@@ -86,7 +86,7 @@ async function getAuctions() {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      for (let index = 1000; index < 1010; index++) {
+      for (let index = 0; index < 100; index++) {
         generateAuctionTableListing(data.auctions[index]);
       }
       data.auctions.forEach((auction) => {
