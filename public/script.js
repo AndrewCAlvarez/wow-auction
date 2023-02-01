@@ -24,13 +24,6 @@ function loadRealmSelectElement() {
   });
 }
 
-async function loadAuctionHouse() {
-  let realmId = document.querySelector(".realmIndexSelect").value;
-  // console.log(realmId);
-  // await getCommodities();
-  await getAuctions(realmId);
-}
-
 async function getRealmIndex() {
   const url = "http://127.0.0.1:3000/api/realm-index";
   await fetch(url)
@@ -84,7 +77,8 @@ async function getCommodities() {
     .then((data) => console.log(data));
 }
 
-async function getAuctions(realmId) {
+async function getAuctions() {
+  let realmId = document.querySelector(".realmIndexSelect").value;
   // console.log("Realm id selected: " + realmId);
   console.log("Getting Auctions...\n");
   const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmId}`;
@@ -92,11 +86,11 @@ async function getAuctions(realmId) {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      for (let index = 100; index < 120; index++) {
+      for (let index = 1000; index < 1010; index++) {
         generateAuctionTableListing(data.auctions[index]);
       }
       data.auctions.forEach((auction) => {
-        // Doing this makes too many requests and takes forever to load.
+        // NOTE: Doing this makes too many requests and takes forever to load.
         // generateAuctionTableListing(auction);
       });
       // console.log(data.auctions[0]);
@@ -104,7 +98,7 @@ async function getAuctions(realmId) {
     });
 }
 
-function generateAuctionTableListing(auction) {
+async function generateAuctionTableListing(auction) {
   // auction = {
   //   id: 669294874,
   //   item: {
@@ -126,41 +120,41 @@ function generateAuctionTableListing(auction) {
   //   time_left: "LONG",
   // };
   // console.log(await getItemById(auction.item.id));
-  // let itemData = await getItemById(auction.item.id);
-  getItemById(auction.item.id).then((itemData) => {
-    console.log("auction id logged: " + auction.id);
-    console.log("itemData id logged: " + itemData.id);
-    let listingContainer = document.querySelector(".auctionTableListContainer");
-    let icon = document.createElement("p");
-    let name = document.createElement("p");
-    let duration = document.createElement("p");
-    let quantity = document.createElement("p");
-    let bid = document.createElement("p");
-    let buyout = document.createElement("p");
 
-    icon.textContent = "ICON";
-    name.textContent = itemData.name;
-    duration.textContent = auction.time_left;
-    quantity.textContent = auction.quantity;
-    bid.textContent = !auction.bid ? auction.bid : "";
-    buyout.textContent = auction.buyout;
+  let itemData = await getItemById(auction.item.id);
+  // console.log("auction id logged: " + auction.id);
+  // console.log("itemData id logged: " + itemData.name);
+  let listingContainer = document.querySelector(".auctionTableListContainer");
+  let icon = document.createElement("p");
+  let name = document.createElement("p");
+  let duration = document.createElement("p");
+  let quantity = document.createElement("p");
+  let bid = document.createElement("p");
+  let buyout = document.createElement("p");
 
-    listingContainer.appendChild(icon);
-    listingContainer.appendChild(name);
-    listingContainer.appendChild(duration);
-    listingContainer.appendChild(quantity);
-    listingContainer.appendChild(bid);
-    listingContainer.appendChild(buyout);
-  });
+  icon.textContent = "ICON";
+  name.textContent = itemData.name;
+  duration.textContent = auction.time_left;
+  quantity.textContent = auction.quantity;
+  bid.textContent = !auction.bid ? auction.bid : "";
+  buyout.textContent = auction.buyout;
+
+  listingContainer.appendChild(icon);
+  listingContainer.appendChild(name);
+  listingContainer.appendChild(duration);
+  listingContainer.appendChild(quantity);
+  listingContainer.appendChild(bid);
+  listingContainer.appendChild(buyout);
 }
 
 async function getItemById(itemId) {
-  // console.log(itemId);
+  console.log(itemId);
   let itemData;
   const url = `http://127.0.0.1:3000/api/item?itemid=${itemId}`;
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {
+      console.log("getItemById: " + data.name);
       itemData = data;
     });
 

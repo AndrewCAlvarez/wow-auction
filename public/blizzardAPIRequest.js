@@ -144,10 +144,11 @@ async function getAuctions(clientID, clientSecret, grant_type, realmId) {
 }
 
 async function getItemById(clientID, clientSecret, grant_type, itemId) {
+  console.log("ITEM ID: " + itemId);
   let accessToken = await getAccessToken(clientID, clientSecret, grant_type);
   console.log(`Current value of accessToken: ${accessToken}`);
   // I don't know why but the namespace is different for items. Static is used instead.
-  const url = `https://${hostName}/data/wow/item/${1417}?${namespaceStatic}&access_token=${accessToken}`;
+  const url = `https://${hostName}/data/wow/item/${itemId}?${namespaceStatic}&access_token=${accessToken}`;
 
   let item;
 

@@ -1,0 +1,34 @@
+----- GOALS -----
+- Squash bugs
+- Alphabetize realm select dropdown element
+- Load commodities 
+- Load item media for listings
+- Convert price to gold, silver & copper
+----- BUGS -----
+
+- Function getAuctions returns same name for every item.
+--------------------------------------------------------------
+
+----- FEATURES -----
+- Add Wowhead links for items
+- Load commodities by connected realm id
+- Search by item name.
+- Pagination of results
+- Sort results
+- Filter results
+- Load only a set number of results at a time
+- Store data in browser (efficiency)(cookies?)
+	- Selected realm 
+	- auction data 
+	- commodity data 
+- Store data on server & update 1hr (efficiency)
+	- auctions
+	- commodities
+	- (Maybe do this last or have dummy data. This could
+	use a lot of time during development)
+	- accessToken
+- Refresh data automatically
+	- accessToken
+	- auctions
+	- commodities
+- Research ways to speed up the app

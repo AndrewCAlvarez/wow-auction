@@ -74,12 +74,12 @@ app.get("/api/auctions", (req, res) => {
 });
 
 app.get("/api/item", (req, res) => {
-  console.log(req.query.itemid);
+  console.log("REQUEST ITEM ID: " + req.query.itemid);
   getItemById(
     params.client_id,
     params.client_secret,
     params.grant_type,
-    req.query.id
+    req.query.itemid
   ).then((data) => res.json(data));
 });
 
