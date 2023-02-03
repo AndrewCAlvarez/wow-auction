@@ -1,10 +1,16 @@
+import { auctionSampleData } from "./auctionSampleData.js";
+import { connectedRealmIndexSample } from "./connectedRealmIndexSample.js";
+import { commoditiesSampleData } from "./commoditiesSampleData.js";
+console.log(auctionSampleData);
 let state = {
-  connectedRealmData: [],
+  connectedRealmData: connectedRealmIndexSample,
+  commodityData: commoditiesSampleData,
+  auctionData: auctionSampleData,
 };
 
 window.addEventListener("load", (event) => {
   getConnectedRealmIndex().then((connectedRealmList) => {
-    state.connectedRealmData = connectedRealmList;
+    // state.connectedRealmData = connectedRealmList;
     loadRealmSelectElement();
   });
 });
@@ -16,6 +22,26 @@ function clearAuctionTable() {
     if (listing.parentNode) {
       listing.parentNode.removeChild(listing);
     }
+  });
+}
+document
+  .querySelector(".btnLoadCommodities")
+  .addEventListener("click", loadCommodities);
+function loadAuctionHouse() {
+  getAuctions()
+    .then((auctionData) => {
+      state.auctionData = auctionData;
+    })
+    .then(() => {
+      console.log("Load auction auction data:");
+      console.log(state.auctionData);
+    });
+  // console.log(`Commodity data: ${state.commodityData}`);
+}
+
+function loadCommodities() {
+  getCommodities().then((commoditiesData) => {
+    console.log(commoditiesData);
   });
 }
 
@@ -74,6 +100,7 @@ async function getConnectedRealmIndex() {
   await fetch(connectedRealmIndexURL)
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       realmList = data;
     });
 
@@ -86,21 +113,24 @@ async function getCommodities() {
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      for (let index = 0; index < 100; index++) {
-        generateAuctionTableListing(data.auctions[index]);
-      }
+      // console.log(data);
+      // for (let index = 0; index < 100; index++) {
+      //   generateAuctionTableListing(data.auctions[index]);
+      // }
     });
 }
 
 async function getAuctions() {
   let realmId = document.querySelector(".realmIndexSelect").value;
+  let auctionData;
   // console.log("Realm id selected: " + realmId);
   console.log("Getting Auctions...\n");
   const url = `http://127.0.0.1:3000/api/auctions?realmid=${realmId}`;
-  await fetch(url)
+  fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      auctionData = data;
+
       for (let index = 0; index < 5; index++) {
         generateAuctionTableListing(data.auctions[index]);
       }
@@ -108,9 +138,17 @@ async function getAuctions() {
         // NOTE: Doing this makes too many requests and takes forever to load.
         // generateAuctionTableListing(auction);
       });
+
       // console.log(data.auctions[0]);
       // createElementAuctionListing(data.auctions[0]);
+    })
+    .then(() => {
+      console.log("getAuctions return value: ");
+      console.log(auctionData);
+      return auctionData;
     });
+
+  // return auctionData;
 }
 
 async function generateAuctionTableListing(auction) {

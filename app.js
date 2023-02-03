@@ -13,7 +13,7 @@ import {
   getItemById,
   getItemMedia,
   getRealmListData,
-} from "./public/blizzardAPIRequest.js";
+} from "./blizzardAPIRequest.js";
 
 const app = express();
 const port = 3000;
@@ -48,7 +48,7 @@ app.get("/api/connected-realm/index", (req, res) => {
     params.client_secret,
     params.grant_type
   ).then((data) => {
-    res.send(data);
+    res.json(data);
   });
 });
 
@@ -58,7 +58,7 @@ app.get("/api/commodities", (req, res) => {
     params.client_secret,
     params.grant_type
   ).then((data) => {
-    res.send(data);
+    res.json(data);
   });
 });
 
@@ -70,7 +70,7 @@ app.get("/api/auctions", (req, res) => {
     params.grant_type,
     req.query.realmid
   ).then((data) => {
-    res.send(data);
+    res.json(data);
   });
 });
 
@@ -81,7 +81,7 @@ app.get("/api/item", (req, res) => {
     params.client_secret,
     params.grant_type,
     req.query.itemid
-  ).then((data) => res.send(data));
+  ).then((data) => res.json(data));
 });
 
 app.get("/api/data/media/item", (req, res) => {
@@ -91,7 +91,7 @@ app.get("/api/data/media/item", (req, res) => {
     params.client_secret,
     params.grant_type,
     req.query.itemid
-  ).then((data) => res.send(data));
+  ).then((data) => res.json(data));
 });
 
 app.listen(port, () => {

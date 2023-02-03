@@ -1,8 +1,10 @@
 ----- GOALS -----
 X - Squash bugs
 - Alphabetize realm select dropdown element
-- Load commodities 
-- Load item media for listings
+X - Load commodities 
+X - Load item media for listings
+- Search
+- Save realm-specific and commodity data (efficiency)
 - Convert price to gold, silver & copper
 - Prevent duplicate listing on multiple searches
 - Refresh table on search
@@ -12,8 +14,9 @@ X - Squash bugs
 --------------------------------------------------------------
 
 ----- FEATURES -----
+- Clickable listing for expanded information
 - Add Wowhead links for items
-- Load commodities by connected realm id
+X - Load commodities by connected realm id
 - Search by item name.
 - Pagination of results
 - Sort results
