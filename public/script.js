@@ -12,6 +12,9 @@ window.addEventListener("load", (event) => {
   getConnectedRealmIndex().then((connectedRealmList) => {
     // state.connectedRealmData = connectedRealmList;
     loadRealmSelectElement();
+    document
+      .querySelector(".btnLoadCommodities")
+      .addEventListener("click", loadCommodities);
   });
 });
 
@@ -24,9 +27,7 @@ function clearAuctionTable() {
     }
   });
 }
-document
-  .querySelector(".btnLoadCommodities")
-  .addEventListener("click", loadCommodities);
+
 function loadAuctionHouse() {
   getAuctions()
     .then((auctionData) => {
@@ -94,17 +95,18 @@ async function getRealmIndex() {
 }
 
 async function getConnectedRealmIndex() {
-  console.log("FETCHING CONNECTED REALM INDEX FROM NODEJS APPLICATION");
-  const connectedRealmIndexURL = `http://127.0.0.1:3000/api/connected-realm/index`;
-  let realmList;
-  await fetch(connectedRealmIndexURL)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      realmList = data;
-    });
+  // console.log("FETCHING CONNECTED REALM INDEX FROM NODEJS APPLICATION");
+  // const connectedRealmIndexURL = `http://127.0.0.1:3000/api/connected-realm/index`;
+  // let realmList;
+  // await fetch(connectedRealmIndexURL)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log(data);
+  //     realmList = data;
+  //   });
 
-  return realmList;
+  // return realmList;
+  return state.connectedRealmData;
 }
 
 async function getCommodities() {

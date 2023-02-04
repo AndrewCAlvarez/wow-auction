@@ -1,3 +1,62 @@
+@import url("./color.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.header {
+  color: var(--color-white);
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.logo--header {
+  color: var(--color-tertiary);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.searchContainer {
+  height: 2rem;
+  width: 65%;
+  background-color: var(--color-white);
+}
+
+.input--search {
+  background-color: var(--color-white);
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+
+.testingPanel {
+  background-color: var(--color-black);
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1px;
+}
+
+.btn--test {
+  background-color: var(--color-primary);
+  width: 10rem;
+  padding: 1rem;
+}
+
 .listing-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -8,19 +67,18 @@
 
 .realmIndexSelect {
   border: none;
-  background-color: #433d31;
+  background-color: var(--color-primary);
   color: #e5e5e5;
-  height: 2rem;
+
   text-align: center;
   cursor: pointer;
-  margin-bottom: 1rem;
 }
 
 button {
   border: none;
   background-color: #433d31;
   color: #e5e5e5;
-  height: 2rem;
+
   text-align: center;
   cursor: pointer;
 }

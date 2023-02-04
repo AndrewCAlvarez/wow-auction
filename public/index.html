@@ -8,24 +8,39 @@
     <title>Wow Auctions</title>
   </head>
   <body>
-    <button onclick="getRealmIndex()">Get Realm Index</button>
-    <button onclick="getConnectedRealmsIndex()">
-      Get Connected Realm Index
-    </button>
-    <button class="btnLoadCommodities">Load Commodities</button>
-    <button onclick="getAuctions()">Get Auctions</button>
-    <h1>Select Realm</h1>
-    <section style="display: flex; gap: 1rem">
+    <header class="header container">
+      <p class="logo--header">AuctionQuest</p>
+      <div class="searchContainer">
+        <input class="input--search" type="search" placeholder="search" />
+      </div>
       <select name="realmIndex" class="realmIndexSelect"></select>
-      <button class="btnLoadAuctionHouse" onclick="loadAuctionHouse()">
+    </header>
+
+    <section class="testingPanel">
+      <button class="btn--test" onclick="getRealmIndex()">
+        Get Realm Index
+      </button>
+      <button class="btn--test" onclick="getConnectedRealmsIndex()">
+        Get Connected Realm Index
+      </button>
+      <button class="btn--test btnLoadCommodities">Load Commodities</button>
+      <button class="btn--test" onclick="getAuctions()">Get Auctions</button>
+
+      <button
+        class="btn--test"
+        class="btnLoadAuctionHouse"
+        onclick="loadAuctionHouse()"
+      >
         Load Auction House
       </button>
-      <button onclick="clearAuctionTable()">Test clear table</button>
-      <button onclick="generateAuctionTableListing()">
+      <button class="btn--test" onclick="clearAuctionTable()">
+        Test clear table
+      </button>
+      <button class="btn--test" onclick="generateAuctionTableListing()">
         Load sample auction listing
       </button>
     </section>
-    <div class="response"></div>
+
     <section class="auctionTableListContainer">
       <div class="auctionTableHeader">
         <div>Icon</div>
