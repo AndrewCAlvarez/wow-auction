@@ -177,6 +177,22 @@ async function getItemMedia(clientID, clientSecret, grant_type, itemId) {
   return itemMedia;
 }
 
+async function searchItemByName(clientID, clientSecret, grant_type, itemName) {
+  let searchResults;
+  const url = `https://${hostName}/data/wow/search/item?namespace=static-us&name.en_US=${itemName}&orderby=id&_page=1&access_token=${accessToken}`;
+  await getAccessToken(clientID, clientSecret, grant_type);
+  await fetch(
+    `https://us.api.blizzard.com/data/wow/search/item?namespace=static-us&name.en_US=${itemName}&orderby=id&_page=1&access_token=${accessToken}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      searchResults = data;
+    });
+
+  return searchResults;
+}
+
 async function getConnectedRealmAuctionData(realmAuctionURL) {
   // Returns ALL auctions shared between a group of realms based on the connected realms' URL.
   const url = `${realmAuctionURL}&access_token=${accessToken}`;
@@ -184,57 +200,6 @@ async function getConnectedRealmAuctionData(realmAuctionURL) {
     .then((response) => response.json())
     .then((data) => console.log(data));
 }
-
-// console.log(realmIndex.connected_realm[0]);
-// console.log(getConnectedRealm(realmIndex[2]));
-// .then(() =>
-//   fetch(
-//     `https://${hostName}/data/wow/connected-realm/index?${namespace}&access_token=${accessToken}`
-//   )
-// )
-// .then((response) => response.json())
-// .then((data) => {
-//   data.connected_realms.forEach((realmhref) => {
-//     realmIDs.push(
-//       realmhref.href
-//         .replace(
-//           "https://us.api.blizzard.com/data/wow/connected-realm/",
-//           ""
-//         )
-//         .replace("?namespace=dynamic-us", "")
-//     );
-//   });
-//   // console.log(realmIDs);
-//   // res.json(data);
-// })
-// .then(() => {
-//   let realmData = [];
-//   realmIDs.forEach((realmID) => {
-//     realmData.push(
-//       fetch(
-//         `https://${hostName}/data/wow/connected-realm/${realmID}?${namespace}&access_token=${accessToken}`
-//       )
-//     );
-//   });
-
-//   // Fetch individual realm info and push to realms array.
-//   Promise.all(realmData).then((responses) => {
-//     for (const response of responses) {
-//       if (response.status === 200) {
-//         response
-//           .json()
-//           .then((data) => {
-//             realmNames.push(data.realms[0].name);
-//             // The realmNames array is being populated, but I'm having trouble sending it to the frontend. I think it's an issue of misunderstanding promises.
-//           })
-//           .then(console.log(`FINAL REALM LIST: \n${realmNames}`));
-//       }
-//     }
-//   });
-// })
-// .catch((error) => {
-//   console.error(`ERROR: ${error}`);
-// });
 
 export {
   getAccessToken,
@@ -247,4 +212,5 @@ export {
   getItemById,
   getRealmListData,
   getItemMedia,
+  searchItemByName,
 };

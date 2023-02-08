@@ -13,6 +13,7 @@ import {
   getItemById,
   getItemMedia,
   getRealmListData,
+  searchItemByName,
 } from "./blizzardAPIRequest.js";
 
 const app = express();
@@ -91,6 +92,16 @@ app.get("/api/data/media/item", (req, res) => {
     params.client_secret,
     params.grant_type,
     req.query.itemid
+  ).then((data) => res.json(data));
+});
+
+app.get("/api/search", (req, res) => {
+  console.log("Search request: " + req.query.name);
+  searchItemByName(
+    params.client_id,
+    params.client_secret,
+    params.grant_type,
+    req.query.name
   ).then((data) => res.json(data));
 });
 

@@ -1,7 +1,8 @@
 import { auctionSampleData } from "./auctionSampleData.js";
 import { connectedRealmIndexSample } from "./connectedRealmIndexSample.js";
 import { commoditiesSampleData } from "./commoditiesSampleData.js";
-console.log(auctionSampleData);
+import { auctionSearch } from "./search.js";
+
 let state = {
   connectedRealmData: connectedRealmIndexSample,
   commodityData: commoditiesSampleData,
@@ -29,14 +30,13 @@ function clearAuctionTable() {
 }
 
 function loadAuctionHouse() {
-  getAuctions()
-    .then((auctionData) => {
-      state.auctionData = auctionData;
-    })
-    .then(() => {
-      console.log("Load auction auction data:");
-      console.log(state.auctionData);
-    });
+  getAuctions().then((auctionData) => {
+    console.log(auctionData);
+  });
+  // .then(() => {
+  //   console.log("Load auction auction data:");
+  //   console.log(state.auctionData);
+  // });
   // console.log(`Commodity data: ${state.commodityData}`);
 }
 
@@ -263,3 +263,5 @@ async function createElementAuctionListing(auction) {
 
   container.appendChild(listingContainer);
 }
+
+export { getItemById, getItemMedia };

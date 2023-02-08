@@ -9,6 +9,7 @@
 body {
   background-color: var(--color-black);
   color: var(--color-white);
+  font-family: "Bitter", serif;
 }
 
 .container {
@@ -33,6 +34,7 @@ body {
   height: 2rem;
   width: 65%;
   background-color: var(--color-white);
+  z-index: 100;
 }
 
 .input--search {
@@ -40,6 +42,16 @@ body {
   border: none;
   height: 100%;
   width: 100%;
+}
+
+.input--search:focus {
+  border: none;
+  outline: none;
+}
+
+.searchResult {
+  background-color: var(--color-white);
+  color: var(--color-black);
 }
 
 .testingPanel {
