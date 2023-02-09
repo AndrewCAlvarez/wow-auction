@@ -37,6 +37,17 @@ body {
   z-index: 100;
 }
 
+.searchResult {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  text-decoration: none;
+}
+
+.searchResultText {
+  color: var(--color-black);
+  background-color: var(--color-white);
+}
+
 .input--search {
   background-color: var(--color-white);
   border: none;
@@ -47,11 +58,6 @@ body {
 .input--search:focus {
   border: none;
   outline: none;
-}
-
-.searchResult {
-  background-color: var(--color-white);
-  color: var(--color-black);
 }
 
 .testingPanel {
