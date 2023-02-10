@@ -1,3 +1,5 @@
+import { miningItems } from "./public/scripts/miningItems.js";
+
 const hostName = "us.api.blizzard.com";
 const namespace = "namespace=dynamic-us&locale=en_US";
 const namespaceStatic = "namespace=static-us&locale=en_US";
@@ -26,7 +28,6 @@ async function getCommodities(accessToken) {
   await fetch(url)
     .then((response) => response.json())
     .then((commoditiesData) => {
-      console.log(commoditiesData);
       commodities = commoditiesData;
     });
   return commodities;
@@ -85,13 +86,12 @@ async function getToken(accessToken) {
 }
 
 async function getMiningAuctions(accessToken) {
-  let miningAuctions = [];
+  let miningItemIds = miningItems.items.map((item) => item.id);
   let commodities = await getCommodities(accessToken);
-  commodities.auctions.forEach((auction) => {
-    if (auction.item.id === 189143) {
-      miningAuctions.push(auction);
-    }
-  });
+  let miningAuctions = commodities.auctions.filter((auction) =>
+    miningItemIds.includes(auction.item.id)
+  );
+
   return miningAuctions;
 }
 

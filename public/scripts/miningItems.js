@@ -30,3 +30,5 @@ const miningItems = {
     },
   ],
 };
+
+export { miningItems };

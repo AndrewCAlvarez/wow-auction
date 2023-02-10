@@ -9,7 +9,7 @@ import {
   getItemById,
   getItemMedia,
   getMiningAuctions,
-} from "./blizzardAPIRequest.js";
+} from "./blizzAPI.js";
 
 const app = express();
 const port = 3000;
