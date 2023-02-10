@@ -82,9 +82,9 @@ app.get("/api/item", (req, res) => {
 });
 
 app.get("/api/data/media/item", (req, res) => {
-  getItemMedia(accessToken.access_token, req.query.itemid).then((data) =>
-    res.json(data)
-  );
+  getItemMedia(accessToken.access_token, req.query.itemid).then((data) => {
+    res.json(data);
+  });
 });
 
 app.get("/api/token", (req, res) => {

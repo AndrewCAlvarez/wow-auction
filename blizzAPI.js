@@ -55,19 +55,17 @@ async function getItemById(accessToken, itemId) {
 async function getItemMedia(accessToken, itemId) {
   // https://us.api.blizzard.com/data/wow/media/item/19019?namespace=static-us&locale=en_US&access_token=US9BXh300LGvJx4hGvFB5sff6oqixxsKey
   const url = `https://${hostName}/data/wow/media/item/${itemId}?${namespaceStatic}&access_token=${accessToken}`;
-
+  let media;
   try {
-    let itemMedia = await fetch(url)
+    await fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        return data;
+        media = data;
       });
   } catch (error) {
     console.error(error);
   }
-
-  // return itemMedia;
+  return media;
 }
 
 async function getToken(accessToken) {
