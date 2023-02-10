@@ -4,36 +4,32 @@ import cors from "cors";
 import url from "url";
 import {
   getAccessToken,
-  getConnectedRealmIndex,
-  getConnectedRealm,
-  createConnectedRealmArray,
-  getRealmIndex,
+  getToken,
   getCommodities,
-  getAuctions,
   getItemById,
   getItemMedia,
-  getRealmListData,
-  searchItemByName,
+  getMiningAuctions,
 } from "./blizzardAPIRequest.js";
 
 const app = express();
 const port = 3000;
 app.use(cors());
 dotenv.config();
-let accessToken = "";
 const params = {
   client_id: process.env.CLIENT_ID,
   client_secret: process.env.CLIENT_SECRET,
   grant_type: process.env.GRANT_TYPE,
 };
 
+let accessToken = await getAccessToken(
+  params.client_id,
+  params.client_secret,
+  params.grant_type
+);
+
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
-  // console.log("Getting index.html");
-  // res.send("./index.html");
-});
-
+// Unnecessary
 app.get("/api/realm-index", (req, res) => {
   getRealmIndex(params.client_id, params.client_secret, params.grant_type).then(
     (data) => {
@@ -43,6 +39,7 @@ app.get("/api/realm-index", (req, res) => {
   );
 });
 
+// Unnecessary
 app.get("/api/connected-realm/index", (req, res) => {
   createConnectedRealmArray(
     params.client_id,
@@ -54,15 +51,18 @@ app.get("/api/connected-realm/index", (req, res) => {
 });
 
 app.get("/api/commodities", (req, res) => {
-  getCommodities(
-    params.client_id,
-    params.client_secret,
-    params.grant_type
-  ).then((data) => {
+  getCommodities(accessToken.access_token).then((data) => {
     res.json(data);
   });
 });
 
+app.get("/api/auctions/profession/mining", (req, res) => {
+  getMiningAuctions(accessToken.access_token).then((data) => {
+    res.json(data);
+  });
+});
+
+// Future feature
 app.get("/api/auctions", (req, res) => {
   // console.log(req.query.realmid);
   getAuctions(
@@ -76,25 +76,25 @@ app.get("/api/auctions", (req, res) => {
 });
 
 app.get("/api/item", (req, res) => {
-  // console.log("REQUEST ITEM ID: " + req.query.itemid);
-  getItemById(
-    params.client_id,
-    params.client_secret,
-    params.grant_type,
-    req.query.itemid
-  ).then((data) => res.json(data));
+  getItemById(accessToken.access_token, req.query.itemid).then((data) =>
+    res.json(data)
+  );
 });
 
 app.get("/api/data/media/item", (req, res) => {
-  // console.log("REQUEST ITEM ID: " + req.query.itemid);
-  getItemMedia(
-    params.client_id,
-    params.client_secret,
-    params.grant_type,
-    req.query.itemid
-  ).then((data) => res.json(data));
+  getItemMedia(accessToken.access_token, req.query.itemid).then((data) =>
+    res.json(data)
+  );
 });
 
+app.get("/api/token", (req, res) => {
+  // This gets a World of Warcraft token which is NOT the same as the access token. A WoW token is a type of currency.
+  getToken(accessToken.access_token).then((token) => {
+    res.json(token);
+  });
+});
+
+// Future feature
 app.get("/api/search", (req, res) => {
   console.log("Search request: " + req.query.name);
   searchItemByName(
