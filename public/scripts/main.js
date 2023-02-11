@@ -1,4 +1,9 @@
+import { createCardItemTemplate } from "./templates/itemTemplate.js";
+import { exampleTemplate } from "./templates/example.js";
+
 async function load() {
+  createCardItemTemplate();
+  exampleTemplate();
   await getMiningAuctions();
   await getToken();
 }
