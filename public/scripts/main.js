@@ -1,11 +1,15 @@
-import { createCardItemTemplate } from "./templates/itemTemplate.js";
-import { exampleTemplate } from "./templates/example.js";
+import { generateItemCard } from "./templates/itemTemplate.js";
 
 async function load() {
-  createCardItemTemplate();
-  exampleTemplate();
-  await getMiningAuctions();
-  await getToken();
+  if (
+    Date.now() - localStorage.getItem("timeSinceLastMiningAuctionRequest") >
+      3600000 ||
+    !localStorage.getItem("timeSinceLastMiningAuctionRequest")
+  ) {
+    console.log("Getting updated auctions...");
+    await getMiningAuctions();
+    await getToken();
+  }
 }
 
 async function getMiningAuctions() {

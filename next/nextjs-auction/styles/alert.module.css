@@ -1,0 +1,9 @@
+.success {
+  color: #ffffff;
+  background-color: #6cdb00;
+}
+
+.alert {
+  color: #ffffff;
+  background-color: #dd0000;
+}

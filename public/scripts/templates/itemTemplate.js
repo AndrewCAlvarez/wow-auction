@@ -1,7 +1,7 @@
-function createCardItemTemplate() {
-  let itemTemplate = document.getElementById("card-item-template");
-  let itemTemplateContent = itemTemplate.content;
-  document.body.appendChild(itemTemplateContent);
+function generateItemCard() {
+  fetch("./miningItems.js").then((items) => {
+    console.log(items);
+  });
 }
 
-export { createCardItemTemplate };
+export { generateItemCard };

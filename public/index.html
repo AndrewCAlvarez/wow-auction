@@ -14,24 +14,46 @@
     <title>Wow Auctions</title>
   </head>
   <body>
-    <template id="card-item-template">
-      <h2>Template Test h2</h2>
-    </template>
-    <template id="my-paragraph">
-      <style>
-        p {
-          color: white;
-          background-color: #666;
-          padding: 5px;
-        }
-      </style>
-      <p>My paragraph</p>
-    </template>
+    <div id="app"></div>
 
-    <my-paragraph></my-paragraph>
-    <my-paragraph></my-paragraph>
-    <my-paragraph></my-paragraph>
-    <my-paragraph></my-paragraph>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/jsx">
+      const app = document.getElementById("app");
+
+      function Header({ title }) {
+        return <h1>{title ? title : "Default title"}</h1>;
+      }
+
+      function HomePage() {
+        const [auctions, setAuctions] = React.useState(0);
+
+        const materials = ["Rousing Fire", "Rousing Ire", "Rousing Thunder"];
+
+        function handleClick() {
+          setAuctions(auctions + 1);
+        }
+
+        return (
+          <div>
+            <Header title="Welcome to Auction House" />
+            <ul>
+              {
+                materials.map((material) => (
+                  <li key={material}>{material}</li>
+                ))
+              }
+            </ul>
+
+            <button onClick={handleClick}>Auctions = {auctions}</button>
+          </div>
+        );
+      }
+
+      ReactDOM.render(<HomePage />, app);
+    </script>
     <!------ SECTION HEADER ------>
     <!-- <header class="header container">
       <p class="logo--header">AuctionQuest</p>
