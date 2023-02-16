@@ -16,44 +16,19 @@
   <body>
     <div id="app"></div>
 
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Load React. -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <script type="text/jsx">
-      const app = document.getElementById("app");
-
-      function Header({ title }) {
-        return <h1>{title ? title : "Default title"}</h1>;
-      }
-
-      function HomePage() {
-        const [auctions, setAuctions] = React.useState(0);
-
-        const materials = ["Rousing Fire", "Rousing Ire", "Rousing Thunder"];
-
-        function handleClick() {
-          setAuctions(auctions + 1);
-        }
-
-        return (
-          <div>
-            <Header title="Welcome to Auction House" />
-            <ul>
-              {
-                materials.map((material) => (
-                  <li key={material}>{material}</li>
-                ))
-              }
-            </ul>
-
-            <button onClick={handleClick}>Auctions = {auctions}</button>
-          </div>
-        );
-      }
-
-      ReactDOM.render(<HomePage />, app);
-    </script>
+    <script src="./components/item.js"></script>
     <!------ SECTION HEADER ------>
     <!-- <header class="header container">
       <p class="logo--header">AuctionQuest</p>
