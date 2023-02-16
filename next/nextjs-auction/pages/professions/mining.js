@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
+import React from "react";
 
 import {
   getAccessToken,
   getCommodities,
   getMiningAuctions,
 } from "../../lib/data-retrieval";
+import { miningItems } from "../../lib/miningItems";
 
 //server-side rendering
 export async function getServerSideProps(context) {
@@ -16,7 +18,8 @@ export async function getServerSideProps(context) {
     process.env.GRANT_TYPE
   );
 
-  let miningAuctions = await getMiningAuctions(accessToken);
+  // let miningAuctions = await getMiningAuctions(accessToken);
+  let miningAuctions = {};
   console.log(miningAuctions);
   return {
     props: { miningAuctions },
@@ -24,17 +27,39 @@ export async function getServerSideProps(context) {
 }
 
 export default function Mining({ miningAuctions }) {
+  const [items, setItems] = React.useState(miningItems);
+
   return (
     <Layout>
       <Head>
         <title>Mining</title>
       </Head>
       <h1>Mining</h1>
-      <ul>
-        {miningAuctions.map((auction) => (
+      <table>
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Rising</td>
+            <td>Average</td>
+            <td>High</td>
+            <td>Low</td>
+          </tr>
+        </thead>
+        {/* {miningAuctions.map((auction) => (
           <li key={auction.id}>{auction.id}</li>
-        ))}
-      </ul>
+        ))} */}
+        <tbody>
+          {items.map((item) => (
+            <tr>
+              <td>{item.name}</td>
+              <td>{item.rising ? "UP" : "DOWN"}</td>
+              <td>{item.average}</td>
+              <td>{item.high}</td>
+              <td>{item.low}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </Layout>
   );
 }
