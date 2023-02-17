@@ -41,7 +41,7 @@ export default function Layout({ children, home }) {
             <Link href="/">
               <Image
                 priority
-                src="/images/IconSmall_Dwarf_Male.webp"
+                src="/images/dwarf-icon-26.jpg"
                 className={utilStyles.borderCircle}
                 height={108}
                 width={108}

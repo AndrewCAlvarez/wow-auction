@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
-import React from "react";
+import Table from "../../components/table";
+import { useEffect, useState } from "react";
 
 import {
   getAccessToken,
@@ -10,56 +11,64 @@ import {
 } from "../../lib/data-retrieval";
 import { miningItems } from "../../lib/miningItems";
 
-//server-side rendering
-export async function getServerSideProps(context) {
-  let accessToken = await getAccessToken(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    process.env.GRANT_TYPE
-  );
+function getItemPrices(item, miningAuctions) {
+  let itemPrices = [];
 
-  // let miningAuctions = await getMiningAuctions(accessToken);
-  let miningAuctions = {};
-  console.log(miningAuctions);
-  return {
-    props: { miningAuctions },
-  };
+  let itemAuctions = miningAuctions.filter(
+    (auction) => auction.item.id === item.id
+  );
+  itemAuctions.forEach((auction) => {
+    itemPrices.push(Number(auction.unit_price));
+  });
+
+  return itemPrices;
 }
 
-export default function Mining({ miningAuctions }) {
-  const [items, setItems] = React.useState(miningItems);
+function getAveragePrice(itemPrices) {
+  let sum = 0;
+  itemPrices.forEach((price) => {
+    sum += price;
+  });
+  return Math.floor(sum / itemPrices.length);
+}
+
+function createNewItemsObj(items, miningAuctions) {
+  let newItems = [];
+
+  items.forEach((item) => {
+    let itemPrices = getItemPrices(item, miningAuctions);
+    let averagePrice = getAveragePrice(itemPrices);
+    let highPrice = Math.max(...itemPrices);
+    let lowPrice = Math.min(...itemPrices);
+    let itemChanges = {
+      rising: "UP",
+      average: averagePrice,
+      high: highPrice,
+      low: lowPrice,
+    };
+    const newItem = { ...item, ...itemChanges };
+    newItems.push(newItem);
+  });
+
+  return newItems;
+}
+
+export default function Mining(props) {
+  const [items, setItems] = useState(miningItems);
+
+  // TODO: Call on first load, then refresh every hour
+  useEffect(() => {
+    let newItems = createNewItemsObj(items, props.miningAuctions);
+    setItems(newItems);
+  }, []);
 
   return (
-    <Layout>
-      <Head>
-        <title>Mining</title>
-      </Head>
+    <section>
       <h1>Mining</h1>
-      <table>
-        <thead>
-          <tr>
-            <td>Name</td>
-            <td>Rising</td>
-            <td>Average</td>
-            <td>High</td>
-            <td>Low</td>
-          </tr>
-        </thead>
-        {/* {miningAuctions.map((auction) => (
-          <li key={auction.id}>{auction.id}</li>
-        ))} */}
-        <tbody>
-          {items.map((item) => (
-            <tr>
-              <td>{item.name}</td>
-              <td>{item.rising ? "UP" : "DOWN"}</td>
-              <td>{item.average}</td>
-              <td>{item.high}</td>
-              <td>{item.low}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Layout>
+      <Table
+        items={items}
+        tableHeaders={["Name", "Rising", "Average", "High", "Low"]}
+      />
+    </section>
   );
 }
