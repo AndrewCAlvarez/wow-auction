@@ -47,6 +47,7 @@ function createNewItemsObj(items, miningAuctions) {
       low: lowPrice,
     };
     const newItem = { ...item, ...itemChanges };
+
     newItems.push(newItem);
   });
 

@@ -14,21 +14,21 @@ export default function Table(props) {
         {props.items.map((item) => (
           <tr key={item.id}>
             <td>
-              <Link href="/professions/item">{item.name}</Link>
+              <Link href={`/items/${item.id}`}>{item.name}</Link>
             </td>
             <td>
-              <Link href="/professions/item">
+              <Link href={`/items/${item.id}`}>
                 {item.rising ? "UP" : "DOWN"}
               </Link>
             </td>
             <td>
-              <Link href="/professions/item">{item.average}</Link>
+              <Link href={`/items/${item.id}`}>{item.average}</Link>
             </td>
             <td>
-              <Link href="/professions/item">{item.high}</Link>
+              <Link href={`/items/${item.id}`}>{item.high}</Link>
             </td>
             <td>
-              <Link href="/professions/item">{item.low}</Link>
+              <Link href={`/items/${item.id}`}>{item.low}</Link>
             </td>
           </tr>
         ))}

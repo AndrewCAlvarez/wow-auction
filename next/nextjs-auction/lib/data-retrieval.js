@@ -19,8 +19,6 @@ export async function getAccessToken(clientID, clientSecret, grantType) {
 export async function getCommodities(accessToken) {
   console.log(`Current value of accessToken: ${accessToken.access_token}`);
   const url = `https://${process.env.HOST_NAME}/data/wow/auctions/commodities?${process.env.NAMESPACE}&access_token=${accessToken.access_token}`;
-  console.log(process.env.HOST_NAME);
-  console.log(process.env.NAMESPACE);
 
   let commodities;
   await fetch(url)

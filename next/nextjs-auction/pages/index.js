@@ -4,6 +4,7 @@ import Link from "next/link";
 import Layout, { siteTitle } from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
 import { getSortedPostsData } from "../lib/posts";
+import Dashboard from "./dashboard";
 
 // pre-rendering
 export async function getStaticProps() {
@@ -24,8 +25,9 @@ export default function Home({ allPostsData }) {
       <section className={utilStyles.headingMd}>
         <ul>
           <li>
-            <Link href="/posts/first-post">First Post</Link>
+            <Link href="/dashboard">Dashboard</Link>
           </li>
+
           <li>
             <Link href="/professions/mining">Mining</Link>
           </li>
