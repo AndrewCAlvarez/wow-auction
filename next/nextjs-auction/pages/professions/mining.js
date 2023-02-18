@@ -1,14 +1,5 @@
-import Link from "next/link";
-import Head from "next/head";
-import Layout from "../../components/layout";
 import Table from "../../components/table";
 import { useEffect, useState } from "react";
-
-import {
-  getAccessToken,
-  getCommodities,
-  getMiningAuctions,
-} from "../../lib/data-retrieval";
 import { miningItems } from "../../lib/miningItems";
 
 function getItemPrices(item, miningAuctions) {
@@ -67,6 +58,7 @@ export default function Mining(props) {
     <section>
       <h1>Mining</h1>
       <Table
+        miningAuctions={props.miningAuctions}
         items={items}
         tableHeaders={["Name", "Rising", "Average", "High", "Low"]}
       />

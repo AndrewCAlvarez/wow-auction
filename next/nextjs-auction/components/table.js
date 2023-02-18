@@ -14,7 +14,16 @@ export default function Table(props) {
         {props.items.map((item) => (
           <tr key={item.id}>
             <td>
-              <Link href={`/items/${item.id}`}>{item.name}</Link>
+              <Link
+                href={{
+                  pathname: `/items/${item.id}`,
+                  // query: {
+                  //   auctions: { miningAuctions },
+                  // },
+                }}
+              >
+                {item.name}
+              </Link>
             </td>
             <td>
               <Link href={`/items/${item.id}`}>
