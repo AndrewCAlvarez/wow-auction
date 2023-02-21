@@ -27,11 +27,3 @@ model User {
   @@map(name: "users")
 }
 
-model Item {
-  id            String       @default(cuid()) @id
-  itemData      String
-  priceHistory  String
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  @@map(name: "items")
-}
