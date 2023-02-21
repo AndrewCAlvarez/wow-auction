@@ -26,18 +26,24 @@ export default function Table(props) {
               </Link>
             </td>
             <td>
-              <Link href={`/items/${item.id}`}>
-                {item.rising ? "UP" : "DOWN"}
-              </Link>
+              {/* <Link href={`/items/${item.id}`}> */}
+              {item.rising ? "UP" : "DOWN"}
+              {/* </Link> */}
             </td>
             <td>
-              <Link href={`/items/${item.id}`}>{item.average}</Link>
+              {/* <Link href={`/items/${item.id}`}> */}
+              {item.average}
+              {/* </Link> */}
             </td>
             <td>
-              <Link href={`/items/${item.id}`}>{item.high}</Link>
+              {/* <Link href={`/items/${item.id}`}> */}
+              {item.high}
+              {/* </Link> */}
             </td>
             <td>
-              <Link href={`/items/${item.id}`}>{item.low}</Link>
+              {/* <Link href={`/items/${item.id}`}> */}
+              {item.low}
+              {/* </Link> */}
             </td>
           </tr>
         ))}

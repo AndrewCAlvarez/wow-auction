@@ -1,6 +1,8 @@
 import { getAccessToken } from "../../lib/data-retrieval";
 import { getItemById, getItemMedia } from "../../lib/items";
 import { getMiningAuctions } from "../../lib/data-retrieval";
+import { useEffect, useState } from "react";
+import utilStyles from "../../styles/utils.module.css";
 
 export async function getServerSideProps({ query }) {
   let itemData = {};
@@ -21,7 +23,9 @@ export async function getServerSideProps({ query }) {
     });
 
     itemData = { itemData: itemData, itemAuctions: itemAuctions };
-    console.log(itemData);
+    // console.log(itemData.itemData);
+
+    // console.log(itemData);
   } catch (error) {
     console.log(error);
   }
@@ -30,12 +34,34 @@ export async function getServerSideProps({ query }) {
 }
 
 export default function Item({ data }) {
+  let itemDetails = Object.keys(data.itemData).map((key) => (
+    <li>
+      {key} : {typeof data.itemData[key]}
+    </li>
+  ));
+  console.log(data.itemData);
+
   return (
     <>
-      <ul>
-        <li>{data.itemData.name}</li>
-      </ul>
-
+      <br />
+      <div>
+        <ul>
+          <li>Name: {data.itemData.name}</li>
+          <li>
+            Description:{" "}
+            {!data.itemData.description ? "None" : data.itemData.description}
+          </li>
+          <li>Quality: {data.itemData.quality.name}</li>
+          <li>Level: {data.itemData.level}</li>
+          <li>Required Level: {data.itemData.required_level}</li>
+          <li>Item Class: {data.itemData.item_class.name}</li>
+          <li>Item Sub-Class: {data.itemData.item_subclass.name}</li>
+          <li>Inventory Type: {data.itemData.inventory_type.name}</li>
+          {/* TODO: CONVERT TO GOLD */}
+          <li>Sell Price: {data.itemData.sell_price}</li>
+        </ul>
+      </div>
+      <br />
       <ul>
         {data.itemAuctions.map((auction) => (
           <li>Unit Price: {auction.unit_price}</li>
