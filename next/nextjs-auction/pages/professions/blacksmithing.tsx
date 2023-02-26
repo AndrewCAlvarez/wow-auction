@@ -3,36 +3,35 @@ import Layout from "../../components/layout";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { getAccessToken } from "../../lib/data-retrieval";
-import { getSkillTier, getSkillTiers } from "../../lib/blizzard/profession";
+import {
+  getRecipe,
+  getSkillTier,
+  getSkillTierReagents,
+  getSkillTiers,
+  getRecipes,
+  getProfessionData,
+} from "../../lib/blizzard/profession";
 import { useState } from "react";
+import Table from "../../components/newTable";
+import { getMiningAuctions } from "../../lib/data-retrieval";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  // Blacksmithing
-  const professionId = 164;
-  let accessToken = await getAccessToken(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    process.env.GRANT_TYPE
-  );
-  let skillTierIndex = await getSkillTiers(accessToken, professionId);
-  console.log(skillTierIndex);
-  let skillTier = await getSkillTier(
-    accessToken,
-    skillTierIndex.skill_tiers[0].id,
-    professionId
-  );
-  console.log(skillTier);
+  let professionData = getProfessionData();
+
   return {
-    props: skillTierIndex,
-    skillTier,
+    props: professionData,
   };
 };
 
-export default function Blacksmithing(skillTierIndex) {
+export default function Blacksmithing(profession) {
   const [state, setState] = useState({
-    title: "Dragon Isles Blacksmithing",
+    // title: "Dragon Isles Blacksmithing",
   });
-  console.log(skillTierIndex.name);
+
+  const tableRows = profession.recipes.map((recipe) => {
+    return [recipe.name];
+  });
+
   return (
     <section>
       <Head>
@@ -41,21 +40,18 @@ export default function Blacksmithing(skillTierIndex) {
       <header>
         <nav>
           <ul>
-            <li>
-              {skillTierIndex.name}
-              <ul>
-                {skillTierIndex.skill_tiers.map((tier) => (
-                  <Link href="#">
-                    <li>{tier.name}</li>
-                  </Link>
-                ))}
-              </ul>
-            </li>
+            {profession.skillTierIndex.skill_tiers.map((tier) => (
+              <Link href="#">
+                <li>{tier.name}</li>
+              </Link>
+            ))}
           </ul>
         </nav>
       </header>
       <h1>Blacksmithing</h1>
-      <h2>{state.title}</h2>
+      <h2>{profession.skillTier.name}</h2>
+      <h3>Recipes</h3>
+      <Table tableHeaders={["name"]} tableRows={tableRows} />
     </section>
   );
 }

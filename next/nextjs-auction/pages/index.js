@@ -3,6 +3,7 @@ import Link from "next/link";
 import Layout, { siteTitle } from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
 import { getSortedPostsData } from "../lib/posts";
+import Test from "./test";
 
 // pre-rendering
 export async function getStaticProps() {
@@ -20,8 +21,12 @@ export default function Home({ allPostsData }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
+
       <section className={utilStyles.headingMd}>
         <ul>
+          <li>
+            <Link href="/test">Test</Link>
+          </li>
           <li>
             <Link href="/dashboard">Dashboard</Link>
           </li>
