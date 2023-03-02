@@ -29,11 +29,11 @@ model User {
 }
 
 model Commodity {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid())
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @updatedAt @map(name: "updated_at")
-  item       Item?    @relation(fields: [itemId], references: [id])
-  itemId     String?
+  item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
   quantity   Int
   unit_price Int
 
@@ -41,29 +41,29 @@ model Commodity {
 }
 
 model Auction {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid())
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @updatedAt @map(name: "updated_at")
-  item       Item?    @relation(fields: [itemId], references: [id])
-  itemId     String?
+  // item       Item     @relation(fields: [itemId], references: [id])
+  itemId     String
   quantity   Int
-  unit_price Int
+  buyout     Int
 
   @@map(name: "auctions")
 }
 
 model Item {
-  id                String              @id @default(cuid())
+  id                String              @id @default(uuid())
   createdAt         DateTime            @default(now()) @map(name: "created_at")
   updatedAt         DateTime            @updatedAt @map(name: "updated_at")
-  blizzId           String
-  name              String
+  name              String              
   quality           String
   price_history     Int[]
   media             String
   sell_price        Int
-  auctions          Auction[]
+
   commodities       Commodity[]
+  // auctions          Auction[]
 
 
   @@map(name: "items")
