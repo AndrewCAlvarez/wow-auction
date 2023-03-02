@@ -8,27 +8,38 @@ export async function getStaticProps() {
     `https://us.api.blizzard.com/data/wow/connected-realm/11/auctions?namespace=dynamic-us&locale=en_US&access_token=${accessToken.access_token}`
   );
   let auctionData = await res.json();
-  console.log(auctionData);
+  async function getCommodities(accessToken) {
+    console.log(`Current value of accessToken: ${accessToken}`);
+    const url = `https://us.api.blizzard.com/data/wow/auctions/commodities?namespace=dynamic-us&access_token=${accessToken.access_token}`;
 
+    let commodities;
+    await fetch(url)
+      .then((response) => response.json())
+      .then((commoditiesData) => {
+        commodities = commoditiesData;
+      });
+    return commodities;
+  }
+
+  let commoditiesData = await getCommodities(accessToken);
+  console.log(commoditiesData);
   try {
     await prisma.auction.deleteMany();
     await prisma.item.deleteMany();
-    let auctions = auctionData.auctions.map((auction) => {
-      // console.log(typeof auction.buyout);
-      // if (typeof auction.buyout != Number) {
-      //   console.log(auction.buyout);
-      // }
-      return {
-        itemId: auction.id,
-        quantity: auction.quantity,
-        buyout: auction.buyout,
-      };
-    });
+
     const createAuctions = await prisma.auction.createMany({
       data: auctionData.auctions.map((auction) => ({
         itemId: auction.item.id,
         quantity: auction.quantity,
         buyout: auction.buyout,
+      })),
+    });
+
+    const createCommodities = await prisma.commodity.createMany({
+      data: commoditiesData.auctions.map((auction) => ({
+        itemId: auction.item.id,
+        quantity: auction.quantity,
+        unit_price: auction.unit_price,
       })),
     });
     // const items = await prisma.item.findMany();
