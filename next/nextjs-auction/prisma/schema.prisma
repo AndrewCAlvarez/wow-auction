@@ -45,9 +45,9 @@ model Auction {
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @updatedAt @map(name: "updated_at")
   // item       Item     @relation(fields: [itemId], references: [id])
-  itemId     String
+  itemId     Int
   quantity   Int
-  buyout     Int
+  buyout     BigInt     @default(0)
 
   @@map(name: "auctions")
 }

@@ -8,31 +8,27 @@ export async function getStaticProps() {
     `https://us.api.blizzard.com/data/wow/connected-realm/11/auctions?namespace=dynamic-us&locale=en_US&access_token=${accessToken.access_token}`
   );
   let auctionData = await res.json();
+  console.log(auctionData);
 
   try {
-    // await prisma.auction.deleteMany();
+    await prisma.auction.deleteMany();
     await prisma.item.deleteMany();
     let auctions = auctionData.auctions.map((auction) => {
-      let id = auction.id.toString();
-
-      if (!auction.buyout) {
-        return {
-          itemId: id,
-          quantity: auction.quantity,
-          buyout: 0,
-        };
-      }
+      // console.log(typeof auction.buyout);
+      // if (typeof auction.buyout != Number) {
+      //   console.log(auction.buyout);
+      // }
       return {
-        itemId: id,
+        itemId: auction.id,
         quantity: auction.quantity,
         buyout: auction.buyout,
       };
     });
     const createAuctions = await prisma.auction.createMany({
-      data: auctions.map((auction) => ({
-        itemId: "Rousing Order",
-        quantity: 1000,
-        buyout: 1000,
+      data: auctionData.auctions.map((auction) => ({
+        itemId: auction.item.id,
+        quantity: auction.quantity,
+        buyout: auction.buyout,
       })),
     });
     // const items = await prisma.item.findMany();
