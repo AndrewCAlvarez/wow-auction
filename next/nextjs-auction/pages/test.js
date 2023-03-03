@@ -54,14 +54,13 @@ export async function getStaticProps() {
 }
 
 export default function Test({ auctions, professionData }) {
-  const [skillTier, setSkillTier] = useState({
-    name: professionData.skillTierIndex.skill_tiers[0].name,
-  });
+  const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
+
   console.log(professionData);
 
-  function handleChangeTier(skillTierName) {
-    setSkillTier({ name: skillTierName });
-    console.log(skillTierName);
+  function handleChangeTier(skillTier) {
+    setSkillTier(skillTier);
+    console.log(skillTier.name);
   }
 
   return (
@@ -69,16 +68,27 @@ export default function Test({ auctions, professionData }) {
       <h2>Test</h2>
       <h3>Auctions</h3>
       <ul>
-        {professionData.skillTierIndex.skill_tiers.map((skillTier) => {
+        {professionData.allSkillTiers.map((skillTier) => {
           return (
-            <li onClick={() => handleChangeTier(skillTier.name)}>
-              {" "}
+            <li onClick={() => handleChangeTier(skillTier)}>
               {skillTier.name}
             </li>
           );
         })}
       </ul>
       <h3>{skillTier.name}</h3>
+      <ul>
+        {skillTier.categories.map((category) => (
+          <li>
+            <h4>{category.name}</h4>
+            <ul>
+              {category.recipes.map((recipe) => (
+                <li>{recipe.name}</li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }

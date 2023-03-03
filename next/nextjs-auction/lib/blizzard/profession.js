@@ -146,5 +146,11 @@ export async function getProfessionData() {
 
   let reagents = await getSkillTierReagents(accessToken, skillTier);
 
-  return { skillTierIndex, skillTier, recipes, allRecipes };
+  const allSkillTiers = await getAllSkillTiers(
+    accessToken,
+    skillTierIndex,
+    professionId
+  );
+
+  return { skillTierIndex, skillTier, allSkillTiers, recipes, allRecipes };
 }
