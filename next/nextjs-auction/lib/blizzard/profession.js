@@ -121,6 +121,63 @@ export async function getSkillTierReagents(accessToken, skillTier) {
   // });
 }
 
+export async function getAllReagents(professionId) {
+  let accessToken = await getAccessToken();
+  let skillTierIndex = await getSkillTiers(accessToken, professionId);
+  const allSkillTiers = await getAllSkillTiers(
+    accessToken,
+    skillTierIndex,
+    professionId
+  );
+
+  setTimeout(() => {
+    console.log("fetch1");
+  }, 1000);
+  setTimeout(() => {
+    console.log("fetch2");
+  }, 2000);
+  setTimeout(() => {
+    console.log("fetch3");
+  }, 3000);
+  setTimeout(() => {
+    console.log("fetch4");
+  }, 4000);
+
+  let delay = 50;
+  let recipes = await allSkillTiers.map((skillTier) => {
+    skillTier.categories.map((category) =>
+      category.recipes.map((recipe) => {
+        try {
+          delay += 100;
+          setTimeout(() => {
+            fetch(recipe.key.href + "&access_token=" + accessToken.access_token)
+              .then((response) => response.json())
+              .then((recipe) => {
+                console.log(recipe.reagents);
+              });
+          }, delay);
+          return 0;
+        } catch (error) {
+          console.log(error);
+        }
+        return 0;
+      })
+    );
+
+    return {
+      name: skillTier.name,
+      reagents: 6,
+    };
+  });
+
+  // recipes = await Promise.all(recipes).then((recipesData) => recipesData);
+
+  const reagents = recipes;
+
+  return reagents;
+}
+
+// This function is what is primarily called externally
 export async function getProfessionData() {
   // Blacksmithing
   const professionId = 164;
@@ -144,7 +201,7 @@ export async function getProfessionData() {
     professionId
   );
 
-  let reagents = await getSkillTierReagents(accessToken, skillTier);
+  // let reagents = await getSkillTierReagents(accessToken, skillTier);
 
   const allSkillTiers = await getAllSkillTiers(
     accessToken,
@@ -152,5 +209,14 @@ export async function getProfessionData() {
     professionId
   );
 
-  return { skillTierIndex, skillTier, allSkillTiers, recipes, allRecipes };
+  const reagents = await getAllReagents(professionId);
+
+  return {
+    skillTierIndex,
+    skillTier,
+    allSkillTiers,
+    recipes,
+    allRecipes,
+    reagents,
+  };
 }

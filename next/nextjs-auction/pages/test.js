@@ -35,7 +35,7 @@ export async function getStaticProps() {
     // });
 
     const auctions = await prisma.auction.findMany();
-    let professionData = await getProfessionData();
+    const professionData = await getProfessionData();
     return {
       props: {
         auctions: auctions.map((auction) => ({
@@ -50,7 +50,7 @@ export async function getStaticProps() {
   } catch (error) {
     console.log(error);
   }
-  return { props: { auctions }, revalidate: 3600 };
+  return { props: {}, revalidate: 3600 };
 }
 
 export default function Test({ auctions, professionData }) {
