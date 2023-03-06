@@ -3,8 +3,9 @@ import { getAccessToken } from "../lib/data-retrieval";
 import { getCommodities } from "../lib/data-retrieval";
 import { getRecipe } from "../lib/blizzard/profession";
 import { getProfessionData } from "../lib/blizzard/profession";
-import prisma from "../lib/prisma";
+// import prisma from "../lib/prisma";
 import { useState } from "react";
+import Link from "next/link";
 
 export async function getStaticProps() {
   // let accessToken = await getAccessToken();
@@ -35,17 +36,24 @@ export async function getStaticProps() {
     //   })),
     // });
 
-    const auctions = await prisma.auction.findMany();
+    // const auctions = await prisma.auction.findMany();
+    // const commodities = await prisma.commodity.findMany();
     const professionData = await getProfessionData();
 
     return {
       props: {
-        auctions: auctions.map((auction) => ({
-          id: auction.id,
-          itemId: auction.itemId,
-          quantity: auction.quantity,
-          buyout: Number(auction.buyout),
-        })),
+        // auctions: auctions.map((auction) => ({
+        //   id: auction.id,
+        //   itemId: auction.itemId,
+        //   quantity: auction.quantity,
+        //   buyout: Number(auction.buyout),
+        // })),
+        // commodities: commodities.map((commodity) => ({
+        //   id: commodity.id,
+        //   itemId: commodity.itemId,
+        //   quantity: commodity.quantity,
+        //   unitPrice: Number(commodity.unit_price),
+        // })),
         professionData,
       },
       revalidate: 3600,
@@ -56,40 +64,20 @@ export async function getStaticProps() {
   return { props: {}, revalidate: 3600 };
 }
 
-export default function Test({ auctions, professionData }) {
+export default function Test({
+  // auctions, commodities,
+  professionData,
+}) {
   const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   const [filteredAuctions, setFilteredAuctions] = useState([]);
 
-  // console.log(professionData);
-  console.log(auctions);
+  console.log(professionData);
+  // console.log(auctions);
+  // console.log(commodities);
 
   function handleChangeTier(skillTier) {
     setSkillTier(skillTier);
     console.log(skillTier.name);
-  }
-
-  async function getAuctions(recipe) {
-    let itemId;
-    await fetch(
-      `https://us.api.blizzard.com/data/wow/recipe/${recipe.id}?namespace=static-us&locale=en_US&access_token=USvmOSe6qKxWSw0CVz2OUDuDQYzKErUhZb`
-    )
-      .then((response) => response.json())
-      .then((recipe) => {
-        console.log(recipe.crafted_item.id);
-        itemId = recipe.crafted_item.id;
-      });
-
-    setFilteredAuctions(
-      auctions
-        .filter((auction) => auction.itemId === itemId)
-        .map((filtered) => ({
-          name: recipe.name,
-          quantity: filtered.quantity,
-          buyout: filtered.buyout,
-        }))
-    );
-    // console.log(typeof filteredAuctions[0].buyout);
-    console.log(filteredAuctions);
   }
 
   return (
@@ -123,7 +111,9 @@ export default function Test({ auctions, professionData }) {
             <h4>{category.name}</h4>
             <ul>
               {category.recipes.map((recipe) => (
-                <li onClick={() => getAuctions(recipe)}>{recipe.name}</li>
+                <li>
+                  <Link href={`/recipes/${recipe.id}`}>{recipe.name}</Link>
+                </li>
               ))}
             </ul>
           </li>
