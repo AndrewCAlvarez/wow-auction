@@ -61,7 +61,8 @@ export async function getAllSkillTiers(
   return allSkillTiers;
 }
 
-export async function getRecipe(accessToken, recipeId) {
+export async function getRecipe(recipeId) {
+  const accessToken = await getAccessToken();
   const url = `https://${process.env.HOST_NAME}/data/wow/recipe/${recipeId}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
 
   try {
@@ -147,6 +148,7 @@ export async function getAllReagents(professionId) {
   let recipes = await allSkillTiers.map((skillTier) => {
     skillTier.categories.map((category) =>
       category.recipes.map((recipe) => {
+        let reagents = [];
         try {
           delay += 100;
           setTimeout(() => {
@@ -154,9 +156,10 @@ export async function getAllReagents(professionId) {
               .then((response) => response.json())
               .then((recipe) => {
                 console.log(recipe.reagents);
+                reagents.push(recipe.reagents);
               });
           }, delay);
-          return 0;
+          return reagents;
         } catch (error) {
           console.log(error);
         }
@@ -209,7 +212,7 @@ export async function getProfessionData() {
     professionId
   );
 
-  const reagents = await getAllReagents(professionId);
+  // const reagents = await getAllReagents(professionId);
 
   return {
     skillTierIndex,
@@ -217,6 +220,6 @@ export async function getProfessionData() {
     allSkillTiers,
     recipes,
     allRecipes,
-    reagents,
+    // reagents,
   };
 }
