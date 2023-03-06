@@ -1,6 +1,6 @@
 // Comment: This is only a way to share a link of Name, RecipeId and CraftedItemId.
 
-[
+export const dragonIslesRecipes = [
   {
     Id: 190508,
     ListOfReagents: null,
