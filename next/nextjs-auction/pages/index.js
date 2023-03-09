@@ -4,18 +4,26 @@ import Layout, { siteTitle } from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
 import { getSortedPostsData } from "../lib/posts";
 import Test from "./test";
+import { getAccessToken, getCommodities } from "../lib/data-retrieval";
 
 // pre-rendering
 export async function getStaticProps() {
   const allPostsData = getSortedPostsData();
+
+  let accessToken = await getAccessToken();
+  let time = { seconds: Date.now() };
+
   return {
     props: {
       allPostsData,
+      accessToken,
+      time,
     },
+    revalidate: 1000,
   };
 }
 
-export default function Home({ allPostsData }) {
+export default function Home({ allPostsData, accessToken, time }) {
   return (
     <Layout home>
       <Head>
@@ -23,6 +31,9 @@ export default function Home({ allPostsData }) {
       </Head>
 
       <section className={utilStyles.headingMd}>
+        <p>Access Token: {accessToken.access_token}</p>
+        <p>Token expires: {accessToken.expires_in}</p>
+        <p>Time: {time.seconds}</p>
         <ul>
           <li>
             <Link href="/test">Test</Link>

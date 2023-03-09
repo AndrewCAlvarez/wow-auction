@@ -26,7 +26,6 @@ export async function getStaticPaths() {
 
 // `getStaticPaths` requires using `getStaticProps`
 export async function getStaticProps(context) {
-  console.log(context);
   const recipeId = context.params.rid;
   const recipe = await getRecipe(recipeId);
 
@@ -36,12 +35,40 @@ export async function getStaticProps(context) {
     const dragonIslesRecipe = dragonIslesRecipes.find(
       (recipe) => recipe.RecipeId == recipeId
     );
-    console.log(dragonIslesRecipe.Id);
     const auctions = await prisma.auction.findMany({
       where: {
         itemId: dragonIslesRecipe.Id,
       },
     });
+
+    return {
+      // Passed to the page component as props
+      props: {
+        auctions: auctions.map((auction) => ({
+          id: auction.id,
+          itemId: auction.itemId,
+          quantity: auction.quantity,
+          buyout: Number(auction.buyout),
+        })),
+        recipe: recipe,
+      },
+    };
+  }
+  // This means the recipe is from BFA and has two distinct items for Horde and Alliance
+  if (Object.hasOwn(recipe, "alliance_crafted_item")) {
+    let auctions = [];
+    const allianceAuctions = await prisma.auction.findMany({
+      where: {
+        itemId: recipe.alliance_crafted_item.id,
+      },
+    });
+    const hordeAuctions = await prisma.auction.findMany({
+      where: {
+        itemId: recipe.horde_crafted_item.id,
+      },
+    });
+
+    auctions = allianceAuctions.concat(hordeAuctions);
 
     return {
       // Passed to the page component as props

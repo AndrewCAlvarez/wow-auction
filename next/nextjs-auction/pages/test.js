@@ -71,7 +71,7 @@ export default function Test({
   const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   const [filteredAuctions, setFilteredAuctions] = useState([]);
 
-  console.log(professionData);
+  // console.log(professionData);
   // console.log(auctions);
   // console.log(commodities);
 
