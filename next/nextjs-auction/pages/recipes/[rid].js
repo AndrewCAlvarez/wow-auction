@@ -3,6 +3,7 @@ import prisma from "../../lib/prisma";
 import { getProfessionData, getRecipe } from "../../lib/blizzard/profession";
 import { getItemMedia } from "../../lib/blizzard/media";
 import { dragonIslesRecipes } from "../../lib/dragonIslesCraftedItems";
+import { avoidRateLimit } from "../../lib/avoidRateLimit";
 
 export async function getStaticPaths() {
   const professionData = await getProfessionData();
@@ -17,6 +18,16 @@ export async function getStaticPaths() {
     });
   });
 
+  console.log(recipes.length);
+  recipes.splice(
+    recipes.findIndex((recipe) => recipe.params.rid === "47653"),
+    1
+  );
+  recipes.splice(
+    recipes.findIndex((recipe) => recipe.params.rid === "47340"),
+    1
+  );
+  console.log(recipes.length);
   const staticPaths = recipes;
   return {
     paths: staticPaths,
@@ -27,6 +38,8 @@ export async function getStaticPaths() {
 // `getStaticPaths` requires using `getStaticProps`
 export async function getStaticProps(context) {
   const recipeId = context.params.rid;
+  // Delay used to slow down NextJs build to avoid making too many external api calls
+  await avoidRateLimit();
   const recipe = await getRecipe(recipeId);
 
   // const media = await getItemMedia(recipe.crafted_item.id);

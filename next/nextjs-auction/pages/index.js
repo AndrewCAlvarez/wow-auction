@@ -16,14 +16,14 @@ export async function getStaticProps() {
   return {
     props: {
       allPostsData,
-      accessToken,
+
       time,
     },
     revalidate: 1000,
   };
 }
 
-export default function Home({ allPostsData, accessToken, time }) {
+export default function Home({ allPostsData, time }) {
   return (
     <Layout home>
       <Head>
@@ -31,8 +31,6 @@ export default function Home({ allPostsData, accessToken, time }) {
       </Head>
 
       <section className={utilStyles.headingMd}>
-        <p>Access Token: {accessToken.access_token}</p>
-        <p>Token expires: {accessToken.expires_in}</p>
         <p>Time: {time.seconds}</p>
         <ul>
           <li>
