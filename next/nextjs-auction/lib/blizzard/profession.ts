@@ -4,6 +4,8 @@
 // Iterate through all recipes and add all unique items required to db
 // Hard-code blacksmithing and dragonflight skill tier
 
+import { Profession } from "../../classes/Profession";
+
 import { getAccessToken } from "../data-retrieval";
 
 // A skill tier is the id of a profession for a specific expansion.
@@ -212,14 +214,13 @@ export async function getProfessionData() {
     professionId
   );
 
-  // const reagents = await getAllReagents(professionId);
-
   return {
     skillTierIndex,
     skillTier,
     allSkillTiers,
     recipes,
     allRecipes,
+
     // reagents,
   };
 }

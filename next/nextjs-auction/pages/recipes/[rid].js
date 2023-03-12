@@ -18,7 +18,7 @@ export async function getStaticPaths() {
     });
   });
 
-  console.log(recipes.length);
+  // Removes two recipes, a quest item and recrafting
   recipes.splice(
     recipes.findIndex((recipe) => recipe.params.rid === "47653"),
     1
@@ -27,7 +27,7 @@ export async function getStaticPaths() {
     recipes.findIndex((recipe) => recipe.params.rid === "47340"),
     1
   );
-  console.log(recipes.length);
+
   const staticPaths = recipes;
   return {
     paths: staticPaths,

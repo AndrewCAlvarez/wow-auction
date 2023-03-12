@@ -10,7 +10,7 @@ export const siteTitle = "Auction";
 export default function Layout({ children, home }) {
   return (
     <div className={styles.container}>
-      <Head>
+      {/* <Head>
         <Link rel="icon" href="/favicon.ico" />
         <meta name="description" content="Research auction house data" />
         <meta
@@ -62,7 +62,7 @@ export default function Layout({ children, home }) {
         <div className={styles.backToHome}>
           <Link href="/">Back</Link>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

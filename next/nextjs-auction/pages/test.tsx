@@ -6,6 +6,8 @@ import { getProfessionData } from "../lib/blizzard/profession";
 // import prisma from "../lib/prisma";
 import { useState } from "react";
 import Link from "next/link";
+import SkillTierSummary from "../components/skillTierSummary";
+import { Test } from "../interfaces/Test";
 
 export async function getStaticProps() {
   // let accessToken = await getAccessToken();
@@ -92,8 +94,9 @@ export default function Test({
           );
         })}
       </ul>
+
       <h3>Auctions</h3>
-      <button onClick={() => getAuctions(5)}>Get Auctions</button>
+
       <ul>
         {filteredAuctions
           ? filteredAuctions.map((filteredAuction) => (
