@@ -8,8 +8,9 @@ import { useState } from "react";
 import Link from "next/link";
 import SkillTierSummary from "../components/skillTierSummary";
 import { Test } from "../interfaces/Test";
+import { GetStaticProps } from "next";
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async (context) => {
   // let accessToken = await getAccessToken();
   // const res = await fetch(
   //   `https://us.api.blizzard.com/data/wow/connected-realm/11/auctions?namespace=dynamic-us&locale=en_US&access_token=${accessToken.access_token}`
@@ -64,7 +65,7 @@ export async function getStaticProps() {
     console.log(error);
   }
   return { props: {}, revalidate: 3600 };
-}
+};
 
 export default function Test({
   // auctions, commodities,

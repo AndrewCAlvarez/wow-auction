@@ -4,8 +4,9 @@ import { getProfessionData, getRecipe } from "../../lib/blizzard/profession";
 import { getItemMedia } from "../../lib/blizzard/media";
 import { dragonIslesRecipes } from "../../lib/dragonIslesCraftedItems";
 import { avoidRateLimit } from "../../lib/avoidRateLimit";
+import { GetStaticPaths, GetStaticProps } from "next/types";
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const professionData = await getProfessionData();
   const recipes = [];
 
@@ -33,10 +34,10 @@ export async function getStaticPaths() {
     paths: staticPaths,
     fallback: false, // can also be true or 'blocking'
   };
-}
+};
 
 // `getStaticPaths` requires using `getStaticProps`
-export async function getStaticProps(context) {
+export const getStaticProps: GetStaticProps = async (context) => {
   const recipeId = context.params.rid;
   // Delay used to slow down NextJs build to avoid making too many external api calls
   await avoidRateLimit();
@@ -115,7 +116,7 @@ export async function getStaticProps(context) {
       },
     };
   }
-}
+};
 
 export default function Recipe({ recipe, auctions }) {
   const router = useRouter();

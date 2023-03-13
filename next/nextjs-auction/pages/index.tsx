@@ -6,9 +6,22 @@ import {
   getProfessions,
 } from "../lib/blizzard/profession";
 import SkillTierSummary from "../components/skillTierSummary";
+import { GetStaticProps } from "next";
+import { Profession } from "../interfaces/IProfession";
 
-export default function Home({ professions }) {
-  console.log(JSON.parse(professions));
+export const getStaticProps: GetStaticProps = async (context) => {
+  // let professions: Profession[] = [];
+
+  // const auctions = await prisma.auction.findMany();
+  // const commodities = await prisma.commodity.findMany();
+  // professionData = await getProfessionData();
+  let professions = await getProfessions();
+
+  return { props: { professions } };
+};
+
+export default function Home({ professions }: { professions: Profession[] }) {
+  console.log(professions);
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   // const [filteredAuctions, setFilteredAuctions] = useState([]);
   // console.log(professionData);
@@ -33,6 +46,7 @@ export default function Home({ professions }) {
 
     // </Layout>
     <>
+      <h1>{}</h1>
       {/* <h2>Test</h2>
       <ul>
         {professionData.allSkillTiers.map((skillTier) => {
@@ -73,24 +87,4 @@ export default function Home({ professions }) {
       </ul> */}
     </>
   );
-}
-
-export async function getStaticProps() {
-  let professions;
-
-  try {
-    // const auctions = await prisma.auction.findMany();
-    // const commodities = await prisma.commodity.findMany();
-    // professionData = await getProfessionData();
-    professions = await getProfessions();
-
-    return {
-      props: {
-        professions: JSON.stringify(professions),
-      },
-    };
-  } catch (error) {
-    console.log(error);
-  }
-  return { props: { professions } };
 }

@@ -1,5 +1,7 @@
-export interface IProfession {
+export interface Profession {
   id: number;
+  name: string;
+  key: { href: string };
   skillTiers: [
     {
       skillTier: {
