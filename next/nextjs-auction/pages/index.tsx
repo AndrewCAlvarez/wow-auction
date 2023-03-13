@@ -19,7 +19,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   let professionIndex = await getProfessionIndex();
   let professions = await getProfessions(professionIndex);
 
-  return { props: { professionIndex } };
+  return { props: { professionIndex, professions } };
 };
 
 export default function Home({
@@ -29,7 +29,7 @@ export default function Home({
   professions: Profession[];
   professionIndex: ProfessionIndex;
 }) {
-  console.log(professionIndex);
+  console.log(professions);
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   // const [filteredAuctions, setFilteredAuctions] = useState([]);
   // console.log(professionData);

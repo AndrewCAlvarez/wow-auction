@@ -349,14 +349,17 @@ export async function getProfessions(
   ];
 
   try {
-    professionIndex.index.forEach((profession) => {
-      let url = `https://${process.env.HOST_NAME}/data/wow/profession/${profession.id}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
-      fetch(url)
-        .then((response) => response.json())
-        .then((profession: Profession) => {
-          professions.push(profession);
-        });
-    });
+    let promises: Promise<Profession>[] = professionIndex.index.map(
+      (profession) => {
+        let url = `https://${process.env.HOST_NAME}/data/wow/profession/${profession.id}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
+
+        return fetch(url)
+          .then((response) => response.json())
+          .then((profession: Profession) => profession);
+      }
+    );
+    professions = await Promise.all(promises);
+    return professions;
   } catch (error) {
     console.log(error);
   }
