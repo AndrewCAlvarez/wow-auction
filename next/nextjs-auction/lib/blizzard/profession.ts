@@ -4,7 +4,11 @@
 // Iterate through all recipes and add all unique items required to db
 // Hard-code blacksmithing and dragonflight skill tier
 
+import { AccessToken } from "../../classes/AccessToken";
 import { Profession } from "../../classes/Profession";
+import { Recipe } from "../../classes/Recipe";
+import { SkillTier } from "../../classes/SkillTier";
+import { SkillTierCategory } from "../../classes/SkillTierCategory";
 
 import { getAccessToken } from "../data-retrieval";
 
@@ -47,20 +51,22 @@ export async function getSkillTier(accessToken, skillTierId, professionId) {
   }
 }
 
-export async function getAllSkillTiers(
-  accessToken,
-  skillTierIndex,
-  professionId
-) {
-  let allSkillTiers;
-  let skillTierPromises = await skillTierIndex.skill_tiers.map((skillTier) =>
-    getSkillTier(accessToken, skillTier.id, professionId)
-  );
-  await Promise.all(skillTierPromises).then((data) => {
-    allSkillTiers = data;
-  });
+export async function getAllSkillTiers(skillTierIndex, professionId) {
+  try {
+    let accessToken = await getAccessToken();
+    let skillTiers;
+    let skillTierPromises = await skillTierIndex.skill_tiers.map((skillTier) =>
+      getSkillTier(accessToken, skillTier.id, professionId)
+    );
+    await Promise.all(skillTierPromises).then((data) => {
+      console.log(data);
+    });
 
-  return allSkillTiers;
+    return skillTiers;
+  } catch (error) {
+    console.log(error);
+  }
+  return null;
 }
 
 export async function getRecipe(recipeId) {
@@ -113,84 +119,80 @@ export async function getAllRecipes(accessToken, skillTierIndex, professionId) {
   return allRecipes;
 }
 
-export async function getSkillTierReagents(accessToken, skillTier) {
-  // Iterate through all [recipes] in a skill tier and get the recipe by the id.
-  // In each recipe, add the reagent to the reagent list if not listed
-  let recipes = getRecipes(skillTier);
+// export async function getSkillTierReagents(accessToken, skillTier) {
+//   // Iterate through all [recipes] in a skill tier and get the recipe by the id.
+//   // In each recipe, add the reagent to the reagent list if not listed
+//   let recipes = getRecipes(skillTier);
 
-  let promises = [];
-  // recipes.forEach((recipe) => {
-  //   promises.push(5);
-  // });
-}
+//   let promises = [];
+//   // recipes.forEach((recipe) => {
+//   //   promises.push(5);
+//   // });
+// }
 
-export async function getAllReagents(professionId) {
-  let accessToken = await getAccessToken();
-  let skillTierIndex = await getSkillTiers(accessToken, professionId);
-  const allSkillTiers = await getAllSkillTiers(
-    accessToken,
-    skillTierIndex,
-    professionId
-  );
+// export async function getAllReagents(professionId) {
+//   let accessToken = await getAccessToken();
+//   let skillTierIndex = await getSkillTiers(accessToken, professionId);
+//   const allSkillTiers = await getAllSkillTiers(
+//     accessToken,
+//     skillTierIndex,
+//     professionId
+//   );
 
-  setTimeout(() => {
-    console.log("fetch1");
-  }, 1000);
-  setTimeout(() => {
-    console.log("fetch2");
-  }, 2000);
-  setTimeout(() => {
-    console.log("fetch3");
-  }, 3000);
-  setTimeout(() => {
-    console.log("fetch4");
-  }, 4000);
+//   setTimeout(() => {
+//     console.log("fetch1");
+//   }, 1000);
+//   setTimeout(() => {
+//     console.log("fetch2");
+//   }, 2000);
+//   setTimeout(() => {
+//     console.log("fetch3");
+//   }, 3000);
+//   setTimeout(() => {
+//     console.log("fetch4");
+//   }, 4000);
 
-  let delay = 50;
-  let recipes = await allSkillTiers.map((skillTier) => {
-    skillTier.categories.map((category) =>
-      category.recipes.map((recipe) => {
-        let reagents = [];
-        try {
-          delay += 100;
-          setTimeout(() => {
-            fetch(recipe.key.href + "&access_token=" + accessToken.access_token)
-              .then((response) => response.json())
-              .then((recipe) => {
-                console.log(recipe.reagents);
-                reagents.push(recipe.reagents);
-              });
-          }, delay);
-          return reagents;
-        } catch (error) {
-          console.log(error);
-        }
-        return 0;
-      })
-    );
+//   let delay = 50;
+//   let recipes = await allSkillTiers.map((skillTier) => {
+//     skillTier.categories.map((category) =>
+//       category.recipes.map((recipe) => {
+//         let reagents = [];
+//         try {
+//           delay += 100;
+//           setTimeout(() => {
+//             fetch(recipe.key.href + "&access_token=" + accessToken.access_token)
+//               .then((response) => response.json())
+//               .then((recipe) => {
+//                 console.log(recipe.reagents);
+//                 reagents.push(recipe.reagents);
+//               });
+//           }, delay);
+//           return reagents;
+//         } catch (error) {
+//           console.log(error);
+//         }
+//         return 0;
+//       })
+//     );
 
-    return {
-      name: skillTier.name,
-      reagents: 6,
-    };
-  });
+//     return {
+//       name: skillTier.name,
+//       reagents: 6,
+//     };
+//   });
 
-  // recipes = await Promise.all(recipes).then((recipesData) => recipesData);
+//   // recipes = await Promise.all(recipes).then((recipesData) => recipesData);
 
-  const reagents = recipes;
+//   const reagents = recipes;
 
-  return reagents;
-}
+//   return reagents;
+// }
 
 // This function is what is primarily called externally
 export async function getProfessionData() {
   // Blacksmithing
   const professionId = 164;
-  const accessToken = await getAccessToken(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
-    process.env.GRANT_TYPE
-  );
+  const accessToken = await getAccessToken();
   const skillTierIndex = await getSkillTiers(accessToken, professionId);
   const skillTier = await getSkillTier(
     accessToken,
@@ -206,13 +208,9 @@ export async function getProfessionData() {
     professionId
   );
 
-  // let reagents = await getSkillTierReagents(accessToken, skillTier);
+  const allSkillTiers = await getAllSkillTiers(skillTierIndex, professionId);
 
-  const allSkillTiers = await getAllSkillTiers(
-    accessToken,
-    skillTierIndex,
-    professionId
-  );
+  // let professions: Profession[];
 
   return {
     skillTierIndex,
@@ -220,7 +218,55 @@ export async function getProfessionData() {
     allSkillTiers,
     recipes,
     allRecipes,
-
-    // reagents,
   };
+}
+
+export async function getProfessions() {
+  let professionIndex: Profession[] = [];
+  try {
+    professionIndex = await getProfessionIndex();
+  } catch (error) {
+    console.log(error);
+  }
+
+  return {
+    index: professionIndex,
+  };
+}
+
+export async function getProfessionIndex(): Promise<Array<Profession>> {
+  let accessToken: AccessToken;
+  await getAccessToken().then(
+    (data) => (accessToken.access_token = data.access_token)
+  );
+
+  const url = `https://${
+    process.env.HOST_NAME
+  }/data/wow/profession/index?namespace=static-us&locale=${
+    process.env.LOCALE
+  }&access_token=${accessToken!.access_token}`;
+
+  try {
+    let professionIndex: Profession[] = [];
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        data.professions.forEach((profession) => {
+          if (profession.name === "Soul Cyphering") return;
+          if (profession.name === "Protoform Synthesis") return;
+          if (profession.name === "Abominable Stitching") return;
+          if (profession.name === "Ascension Crafting") return;
+          if (profession.name === "Stygia Crafting") return;
+          if (profession.name === "Arcana Manipulation") return;
+          if (profession.name === "Tuskarr Fishing Gear") return;
+
+          professionIndex.push(new Profession(profession.id, profession.name));
+        });
+
+        return professionIndex;
+      });
+  } catch (error) {
+    console.error(error);
+  }
+  return [new Profession(0, "Not Found")];
 }

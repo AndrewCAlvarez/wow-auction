@@ -1,23 +1,21 @@
-import Head from "next/head";
 import Link from "next/link";
-import Layout, { siteTitle } from "../components/layout";
-import utilStyles from "../styles/utils.module.css";
 import { useState } from "react";
-import { getProfessionData } from "../lib/blizzard/profession";
-import Test from "./test";
-import { getAccessToken, getCommodities } from "../lib/data-retrieval";
+import {
+  getProfessionData,
+  getProfessionIndex,
+  getProfessions,
+} from "../lib/blizzard/profession";
 import SkillTierSummary from "../components/skillTierSummary";
-import { avoidRateLimit } from "../lib/avoidRateLimit";
-import { getRecipe } from "../lib/blizzard/profession";
 
-export default function Home({ professionData }) {
-  const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
-  const [filteredAuctions, setFilteredAuctions] = useState([]);
-
-  function handleChangeTier(skillTier) {
-    setSkillTier(skillTier);
-    console.log(skillTier.name);
-  }
+export default function Home({ professions }) {
+  console.log(JSON.parse(professions));
+  // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
+  // const [filteredAuctions, setFilteredAuctions] = useState([]);
+  // console.log(professionData);
+  // function handleChangeTier(skillTier) {
+  //   setSkillTier(skillTier);
+  //   console.log(skillTier.name);
+  // }
 
   return (
     // <Layout home>
@@ -35,7 +33,7 @@ export default function Home({ professionData }) {
 
     // </Layout>
     <>
-      <h2>Test</h2>
+      {/* <h2>Test</h2>
       <ul>
         {professionData.allSkillTiers.map((skillTier) => {
           return (
@@ -72,26 +70,27 @@ export default function Home({ professionData }) {
             </ul>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </>
   );
 }
 
 export async function getStaticProps() {
-  let professionData;
+  let professions;
 
   try {
     // const auctions = await prisma.auction.findMany();
     // const commodities = await prisma.commodity.findMany();
-    professionData = await getProfessionData();
+    // professionData = await getProfessionData();
+    professions = await getProfessions();
 
     return {
       props: {
-        professionData,
+        professions: JSON.stringify(professions),
       },
     };
   } catch (error) {
     console.log(error);
   }
-  return { props: { professionData } };
+  return { props: { professions } };
 }
