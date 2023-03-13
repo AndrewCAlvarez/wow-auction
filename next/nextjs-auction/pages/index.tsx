@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import {
-  getProfessionData,
   getProfessionIndex,
+  getProfessionData,
   getProfessions,
 } from "../lib/blizzard/profession";
 import SkillTierSummary from "../components/skillTierSummary";
 import { GetStaticProps } from "next";
 import { Profession } from "../interfaces/IProfession";
+import { ProfessionIndex } from "../interfaces/IProfessionIndex";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -15,13 +16,20 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // const auctions = await prisma.auction.findMany();
   // const commodities = await prisma.commodity.findMany();
   // professionData = await getProfessionData();
-  let professions = await getProfessions();
+  let professionIndex = await getProfessionIndex();
+  let professions = await getProfessions(professionIndex);
 
-  return { props: { professions } };
+  return { props: { professionIndex } };
 };
 
-export default function Home({ professions }: { professions: Profession[] }) {
-  console.log(professions);
+export default function Home({
+  professions,
+  professionIndex,
+}: {
+  professions: Profession[];
+  professionIndex: ProfessionIndex;
+}) {
+  console.log(professionIndex);
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   // const [filteredAuctions, setFilteredAuctions] = useState([]);
   // console.log(professionData);

@@ -12,6 +12,7 @@ import { SkillTierCategory } from "../../classes/SkillTierCategory";
 
 import { getAccessToken } from "../accessToken";
 import { ProfessionIndex } from "../../interfaces/IProfessionIndex";
+import { ProfessionIndexItem } from "../../interfaces/IProfessionIndexItem";
 
 // // A skill tier is the id of a profession for a specific expansion.
 // export async function getSkillTiers(accessToken, professionId) {
@@ -222,25 +223,50 @@ import { ProfessionIndex } from "../../interfaces/IProfessionIndex";
 //   };
 // }
 
-export async function getProfessions() {
-  let professionIndex: ProfessionIndex = {
-    index: [
-      {
-        id: 0,
-        name: "",
-        key: { href: "" },
-      },
-    ],
-  };
+export async function getProfessionData() {
+  // let professions: Profession[] = [
+  //   {
+  //     id: 0,
+  //     name: "",
+  //     key: { href: "" },
+  //     skillTiers: [
+  //       {
+  //         skillTier: {
+  //           id: 0,
+  //           categories: [
+  //             {
+  //               name: "",
+  //               recipes: [
+  //                 {
+  //                   name: "",
+  //                   key: { href: "" },
+  //                 },
+  //               ],
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     ],
+  //   },
+  // ];
+
   try {
-    professionIndex = await getProfessionIndex();
+    // TODO: Don't forget to pop the first initialized
+    //  element from the professions array
+    let professionIndex = await getProfessionIndex();
+    // TODO: Implement the following functions that flow
+    // logically through the blizzard profession API
+    let professions = await getProfessions(professionIndex);
+    // let skillTiers = await getSkillTiers();
+    // let recipes = await getRecipes();
+    // let items = await getItems();
+    console.log(
+      `Profession index: \n${JSON.stringify(professionIndex, null, 2)}`,
+      `Professions: \n${JSON.stringify(professions, null, 2)}`
+    );
   } catch (error) {
     console.log(error);
   }
-
-  return {
-    professionIndex,
-  };
 }
 
 export async function getProfessionIndex(): Promise<ProfessionIndex> {
@@ -263,7 +289,7 @@ export async function getProfessionIndex(): Promise<ProfessionIndex> {
     await fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        data.professions.forEach((profession: Profession) => {
+        data.professions.forEach((profession: ProfessionIndexItem) => {
           if (profession.name === "Soul Cyphering") return;
           if (profession.name === "Protoform Synthesis") return;
           if (profession.name === "Abominable Stitching") return;
@@ -284,4 +310,56 @@ export async function getProfessionIndex(): Promise<ProfessionIndex> {
     console.error(error);
   }
   return professionIndex;
+}
+
+export async function getProfessions(
+  professionIndex: ProfessionIndex
+): Promise<Profession[]> {
+  let accessToken: AccessToken = await getAccessToken();
+  let professions: Profession[] = [
+    {
+      _links: {
+        self: {
+          href: "",
+        },
+      },
+      id: 0,
+      name: "",
+      description: "",
+      type: {
+        type: "",
+        name: "",
+      },
+      media: {
+        key: {
+          href: "",
+        },
+        id: 0,
+      },
+      skill_tiers: [
+        {
+          key: {
+            href: "",
+          },
+          name: "",
+          id: 0,
+        },
+      ],
+    },
+  ];
+
+  try {
+    professionIndex.index.forEach((profession) => {
+      let url = `https://${process.env.HOST_NAME}/data/wow/profession/${profession.id}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
+      fetch(url)
+        .then((response) => response.json())
+        .then((profession: Profession) => {
+          professions.push(profession);
+        });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  return professions;
 }

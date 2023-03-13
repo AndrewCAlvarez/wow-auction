@@ -31,7 +31,6 @@ export async function getAccessToken(): Promise<AccessToken> {
             expires_in: data.expires_in,
             sub: data.sub,
           };
-          console.log(accessToken);
         }
       });
   } catch (error) {
