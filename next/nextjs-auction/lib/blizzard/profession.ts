@@ -4,15 +4,13 @@
 // Iterate through all recipes and add all unique items required to db
 // Hard-code blacksmithing and dragonflight skill tier
 
-import { AccessToken } from "../../classes/AccessToken";
 import { Profession } from "../../interfaces/IProfession";
-import { Recipe } from "../../classes/Recipe";
-import { SkillTier } from "../../classes/SkillTier";
-import { SkillTierCategory } from "../../classes/SkillTierCategory";
 
 import { getAccessToken } from "../accessToken";
 import { ProfessionIndex } from "../../interfaces/IProfessionIndex";
 import { ProfessionIndexItem } from "../../interfaces/IProfessionIndexItem";
+import { SkillTier } from "../../interfaces/ISkillTier";
+import { AccessToken } from "../../interfaces/IAccessToken";
 
 // // A skill tier is the id of a profession for a specific expansion.
 // export async function getSkillTiers(accessToken, professionId) {
@@ -254,15 +252,25 @@ export async function getProfessionData() {
     // TODO: Don't forget to pop the first initialized
     //  element from the professions array
     let professionIndex = await getProfessionIndex();
+    let professions = await getProfessions(professionIndex);
     // TODO: Implement the following functions that flow
     // logically through the blizzard profession API
-    let professions = await getProfessions(professionIndex);
-    // let skillTiers = await getSkillTiers();
+    let skillTier = await getSkillTierById(
+      professions[0].id,
+      professions[0].skill_tiers[0].id
+    );
+    let professionSkillTiers = await getSkillTiersByProfession(professions[0]);
     // let recipes = await getRecipes();
     // let items = await getItems();
     console.log(
       `Profession index: \n${JSON.stringify(professionIndex, null, 2)}`,
-      `Professions: \n${JSON.stringify(professions, null, 2)}`
+      `Professions: \n${JSON.stringify(professions, null, 2)}`,
+      `SkillTier: \n${JSON.stringify(skillTier, null, 2)}`,
+      `${professions[0].name} skill tiers: \n${JSON.stringify(
+        professionSkillTiers,
+        null,
+        2
+      )}`
     );
   } catch (error) {
     console.log(error);
@@ -365,4 +373,95 @@ export async function getProfessions(
   }
 
   return professions;
+}
+
+export async function getSkillTierById(
+  professionId: number,
+  skillTierId: number
+): Promise<SkillTier> {
+  let skillTier: SkillTier;
+  let accessToken = await getAccessToken();
+  const url = `https://${process.env.HOST_NAME}/data/wow/profession/${professionId}/skill-tier/${skillTierId}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
+
+  try {
+    skillTier = await fetch(url)
+      .then((response) => response.json())
+      .then((data) => data);
+    return skillTier;
+  } catch (error) {
+    console.log(error);
+  }
+
+  skillTier = {
+    _links: {
+      self: {
+        href: "",
+      },
+    },
+    id: 0,
+    name: "",
+    minimum_skill_level: 0,
+    maximum_skill_level: 0,
+    categories: [
+      {
+        name: "",
+        recipes: [
+          {
+            key: {
+              href: "",
+            },
+            name: "",
+            id: 0,
+          },
+        ],
+      },
+    ],
+  };
+  return skillTier;
+}
+
+export async function getSkillTiersByProfession(
+  profession: Profession
+): Promise<SkillTier[]> {
+  let skillTiers: SkillTier[] = [
+    {
+      _links: {
+        self: {
+          href: "",
+        },
+      },
+      id: 0,
+      name: "",
+      minimum_skill_level: 0,
+      maximum_skill_level: 0,
+      categories: [
+        {
+          name: "",
+          recipes: [
+            {
+              key: {
+                href: "",
+              },
+              name: "",
+              id: 0,
+            },
+          ],
+        },
+      ],
+    },
+  ];
+  let accessToken: AccessToken = await getAccessToken();
+
+  try {
+    skillTiers.pop();
+    let promises: Promise<SkillTier>[] = profession.skill_tiers.map(
+      (skillTier) => getSkillTierById(profession.id, skillTier.id)
+    );
+    skillTiers = await Promise.all(promises);
+    return skillTiers;
+  } catch (error) {
+    console.log(error);
+  }
+
+  return skillTiers;
 }

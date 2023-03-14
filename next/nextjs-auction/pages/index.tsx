@@ -4,11 +4,14 @@ import {
   getProfessionIndex,
   getProfessionData,
   getProfessions,
+  getSkillTierById,
+  getSkillTiersByProfession,
 } from "../lib/blizzard/profession";
 import SkillTierSummary from "../components/skillTierSummary";
 import { GetStaticProps } from "next";
 import { Profession } from "../interfaces/IProfession";
 import { ProfessionIndex } from "../interfaces/IProfessionIndex";
+import { SkillTier } from "../interfaces/ISkillTier";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -18,18 +21,29 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // professionData = await getProfessionData();
   let professionIndex = await getProfessionIndex();
   let professions = await getProfessions(professionIndex);
+  let skillTier = await getSkillTierById(
+    professions[0].id,
+    professions[0].skill_tiers[0].id
+  );
+  let professionSkillTiers = await getSkillTiersByProfession(professions[0]);
 
-  return { props: { professionIndex, professions } };
+  return {
+    props: { professionIndex, professions, skillTier, professionSkillTiers },
+  };
 };
 
 export default function Home({
   professions,
   professionIndex,
+  skillTier,
+  professionSkillTiers,
 }: {
   professions: Profession[];
   professionIndex: ProfessionIndex;
+  skillTier: SkillTier;
+  professionSkillTiers: SkillTier[];
 }) {
-  console.log(professions);
+  console.log(professionSkillTiers);
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   // const [filteredAuctions, setFilteredAuctions] = useState([]);
   // console.log(professionData);
