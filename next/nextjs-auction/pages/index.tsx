@@ -7,6 +7,7 @@ import {
   getSkillTierById,
   getSkillTiersByProfession,
   getRecipesBySkillTier,
+  getRecipesByProfession,
 } from "../lib/blizzard/profession";
 import SkillTierSummary from "../components/skillTierSummary";
 import { GetStaticProps } from "next";
@@ -29,6 +30,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   );
   let professionSkillTiers = await getSkillTiersByProfession(professions[0]);
   let skillTierRecipes = await getRecipesBySkillTier(skillTier);
+  let professionRecipes = await getRecipesByProfession(professions[0]);
 
   return {
     props: {
@@ -37,6 +39,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       skillTier,
       professionSkillTiers,
       skillTierRecipes,
+      professionRecipes,
     },
   };
 };
@@ -47,12 +50,14 @@ export default function Home({
   skillTier,
   professionSkillTiers,
   skillTierRecipes,
+  professionRecipes,
 }: {
   professions: Profession[];
   professionIndex: ProfessionIndex;
   skillTier: SkillTier;
   professionSkillTiers: SkillTier[];
   skillTierRecipes: Recipe[];
+  professionRecipes: Recipe[];
 }) {
   console.log(skillTierRecipes);
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);

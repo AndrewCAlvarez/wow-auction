@@ -487,19 +487,76 @@ export async function getRecipesBySkillTier(
   ];
   let accessToken = await getAccessToken();
   try {
-    let promises: Promise<Recipe>[] = skillTier.categories[0].recipes.map(
-      (recipe) => {
-        console.log(
-          recipe.key.href + "&access_token=" + accessToken.access_token
-        );
-        return fetch(
-          recipe.key.href + "&access_token=" + accessToken.access_token
+    let promises: Promise<Recipe>[] = skillTier.categories
+      .map((category) =>
+        category.recipes.map((recipe) =>
+          fetch(recipe.key.href + "&access_token=" + accessToken.access_token)
+            .then((response) => response.json())
+            .then((data) => data)
         )
-          .then((response) => response.json())
-          .then((data) => data);
-      }
-    );
+      )
+      .flat();
     recipes = await Promise.all(promises);
+    return recipes;
+  } catch (error) {
+    console.log(error);
+  }
+
+  return recipes;
+}
+
+export async function getRecipesByProfession(
+  profession: Profession
+): Promise<Recipe[]> {
+  let recipes: Recipe[] = [
+    {
+      _links: {
+        self: {
+          href: "",
+        },
+      },
+      id: 0,
+      name: "",
+      media: {
+        key: {
+          href: "",
+        },
+        id: 0,
+      },
+      reagents: [
+        {
+          reagent: {
+            key: {
+              href: "",
+            },
+            name: "",
+            id: 0,
+          },
+          quantity: 0,
+        },
+      ],
+      modified_crafting_slots: [
+        {
+          slot_type: {
+            key: {
+              href: "",
+            },
+            name: "",
+            id: 0,
+          },
+          display_order: 0,
+        },
+      ],
+    },
+  ];
+  try {
+    let skillTiers = await getSkillTiersByProfession(profession);
+    // let skillTiers = await Promise.all(skillTierPromises);
+    console.log(skillTiers);
+    // let promises: Promise<Recipe>[] = skillTiers.map((skillTier) =>
+    //   getRecipesBySkillTier(skillTier)
+    // );
+    // recipes = await Promise.all(promises);
     return recipes;
   } catch (error) {
     console.log(error);
