@@ -22,7 +22,7 @@ export interface Recipe {
     };
     quantity: number;
   }[];
-  modified_crafting_slots: {
+  modified_crafting_slots?: {
     slot_type: {
       key: {
         href: string;

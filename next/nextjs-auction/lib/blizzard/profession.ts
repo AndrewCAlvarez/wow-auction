@@ -485,6 +485,25 @@ export async function getRecipesBySkillTier(
       ],
     },
   ];
+  let accessToken = await getAccessToken();
+  try {
+    let promises: Promise<Recipe>[] = skillTier.categories[0].recipes.map(
+      (recipe) => {
+        console.log(
+          recipe.key.href + "&access_token=" + accessToken.access_token
+        );
+        return fetch(
+          recipe.key.href + "&access_token=" + accessToken.access_token
+        )
+          .then((response) => response.json())
+          .then((data) => data);
+      }
+    );
+    recipes = await Promise.all(promises);
+    return recipes;
+  } catch (error) {
+    console.log(error);
+  }
 
   return recipes;
 }
