@@ -11,6 +11,7 @@ import { ProfessionIndex } from "../../interfaces/IProfessionIndex";
 import { ProfessionIndexItem } from "../../interfaces/IProfessionIndexItem";
 import { SkillTier } from "../../interfaces/ISkillTier";
 import { AccessToken } from "../../interfaces/IAccessToken";
+import { Recipe } from "../../interfaces/IRecipe";
 
 // // A skill tier is the id of a profession for a specific expansion.
 // export async function getSkillTiers(accessToken, professionId) {
@@ -222,32 +223,6 @@ import { AccessToken } from "../../interfaces/IAccessToken";
 // }
 
 export async function getProfessionData() {
-  // let professions: Profession[] = [
-  //   {
-  //     id: 0,
-  //     name: "",
-  //     key: { href: "" },
-  //     skillTiers: [
-  //       {
-  //         skillTier: {
-  //           id: 0,
-  //           categories: [
-  //             {
-  //               name: "",
-  //               recipes: [
-  //                 {
-  //                   name: "",
-  //                   key: { href: "" },
-  //                 },
-  //               ],
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     ],
-  //   },
-  // ];
-
   try {
     // TODO: Don't forget to pop the first initialized
     //  element from the professions array
@@ -464,4 +439,52 @@ export async function getSkillTiersByProfession(
   }
 
   return skillTiers;
+}
+
+export async function getRecipesBySkillTier(
+  skillTier: SkillTier
+): Promise<Recipe[]> {
+  let recipes: Recipe[] = [
+    {
+      _links: {
+        self: {
+          href: "",
+        },
+      },
+      id: 0,
+      name: "",
+      media: {
+        key: {
+          href: "",
+        },
+        id: 0,
+      },
+      reagents: [
+        {
+          reagent: {
+            key: {
+              href: "",
+            },
+            name: "",
+            id: 0,
+          },
+          quantity: 0,
+        },
+      ],
+      modified_crafting_slots: [
+        {
+          slot_type: {
+            key: {
+              href: "",
+            },
+            name: "",
+            id: 0,
+          },
+          display_order: 0,
+        },
+      ],
+    },
+  ];
+
+  return recipes;
 }
