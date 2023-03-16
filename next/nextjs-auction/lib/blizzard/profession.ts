@@ -290,7 +290,7 @@ export async function getProfessionIndex(): Promise<ProfessionIndex> {
       });
     return professionIndex;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
   return professionIndex;
 }
@@ -489,14 +489,63 @@ export async function getRecipesBySkillTier(
   try {
     let promises: Promise<Recipe>[] = skillTier.categories
       .map((category) =>
-        category.recipes.map((recipe) =>
-          fetch(recipe.key.href + "&access_token=" + accessToken.access_token)
+        category.recipes.map((recipe) => {
+          //the href given by some recipes does not match all of blizzard's other
+          // keys. So the url was implemented manually.
+          let url = `https://${process.env.HOST_NAME}/data/wow/recipe/${recipe.id}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
+          console.log(url);
+          return fetch(url)
             .then((response) => response.json())
-            .then((data) => data)
-        )
+            .then((data) => {
+              if (!recipe.id) {
+                console.log(recipe);
+                return {
+                  _links: {
+                    self: {
+                      href: "",
+                    },
+                  },
+                  id: 0,
+                  name: "",
+                  media: {
+                    key: {
+                      href: "",
+                    },
+                    id: 0,
+                  },
+                  reagents: [
+                    {
+                      reagent: {
+                        key: {
+                          href: "",
+                        },
+                        name: "",
+                        id: 0,
+                      },
+                      quantity: 0,
+                    },
+                  ],
+                  modified_crafting_slots: [
+                    {
+                      slot_type: {
+                        key: {
+                          href: "",
+                        },
+                        name: "",
+                        id: 0,
+                      },
+                      display_order: 0,
+                    },
+                  ],
+                };
+              }
+              return data;
+            });
+        })
       )
       .flat();
     recipes = await Promise.all(promises);
+
     return recipes;
   } catch (error) {
     console.log(error);
@@ -552,15 +601,22 @@ export async function getRecipesByProfession(
   try {
     let skillTiers = await getSkillTiersByProfession(profession);
     // let skillTiers = await Promise.all(skillTierPromises);
-    console.log(skillTiers);
-    // let promises: Promise<Recipe>[] = skillTiers.map((skillTier) =>
-    //   getRecipesBySkillTier(skillTier)
-    // );
-    // recipes = await Promise.all(promises);
+    // let promises = skillTiers
+    //   .map((skillTier) => getRecipesBySkillTier(skillTier))
+    //   .flat();
+    // recipes = (await Promise.all(promises)).flat();
+    let promises = skillTiers
+      .map((skillTier) => getRecipesBySkillTier(skillTier))
+      .flat();
+    recipes = await (await Promise.all(promises)).flat();
     return recipes;
   } catch (error) {
     console.log(error);
   }
 
   return recipes;
+}
+
+export function testFunction() {
+  return 4;
 }

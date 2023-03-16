@@ -59,7 +59,7 @@ export default function Home({
   skillTierRecipes: Recipe[];
   professionRecipes: Recipe[];
 }) {
-  console.log(skillTierRecipes);
+  console.log(professionRecipes);
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   // const [filteredAuctions, setFilteredAuctions] = useState([]);
   // console.log(professionData);
