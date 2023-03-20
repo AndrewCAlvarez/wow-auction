@@ -25,12 +25,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   let professionIndex = await getProfessionIndex();
   let professions = await getProfessions(professionIndex);
   let skillTier = await getSkillTierById(
-    professions[0].id,
-    professions[0].skill_tiers[0].id
+    professions[2].id,
+    professions[2].skill_tiers[0].id
   );
   let professionSkillTiers = await getSkillTiersByProfession(professions[0]);
   let skillTierRecipes = await getRecipesBySkillTier(skillTier);
-  let professionRecipes = await getRecipesByProfession(professions[0]);
+  let professionRecipes = await getRecipesByProfession(professions[2]);
 
   return {
     props: {

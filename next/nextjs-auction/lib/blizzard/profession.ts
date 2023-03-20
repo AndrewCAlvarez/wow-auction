@@ -12,6 +12,7 @@ import { ProfessionIndexItem } from "../../interfaces/IProfessionIndexItem";
 import { SkillTier } from "../../interfaces/ISkillTier";
 import { AccessToken } from "../../interfaces/IAccessToken";
 import { Recipe } from "../../interfaces/IRecipe";
+import { avoidRateLimit, sleep } from "../avoidRateLimit";
 
 // // A skill tier is the id of a profession for a specific expansion.
 // export async function getSkillTiers(accessToken, professionId) {
@@ -441,6 +442,24 @@ export async function getSkillTiersByProfession(
   return skillTiers;
 }
 
+export async function getRecipeById(recipeId: number): Promise<Recipe> {
+  let accessToken = await getAccessToken();
+  //the href given by some recipes does not match all of blizzard's other
+  // keys. So the url was implemented manually.
+  let url = `https://${process.env.HOST_NAME}/data/wow/recipe/${recipeId}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
+  return fetch(url)
+    .then((response) => {
+      if (response.status != 200) {
+        console.log(`URL used: ${url}`);
+        console.log(`RECIPE ID: ${recipeId}`);
+        console.log(response);
+      }
+      return response.json();
+    })
+    .then((data) => data)
+    .catch((error) => `ERROR:${error}`);
+}
+
 export async function getRecipesBySkillTier(
   skillTier: SkillTier
 ): Promise<Recipe[]> {
@@ -485,72 +504,22 @@ export async function getRecipesBySkillTier(
       ],
     },
   ];
-  let accessToken = await getAccessToken();
-  try {
-    let promises: Promise<Recipe>[] = skillTier.categories
-      .map((category) =>
-        category.recipes.map((recipe) => {
-          //the href given by some recipes does not match all of blizzard's other
-          // keys. So the url was implemented manually.
-          let url = `https://${process.env.HOST_NAME}/data/wow/recipe/${recipe.id}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
-          console.log(url);
-          return fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
-              if (!recipe.id) {
-                console.log(recipe);
-                return {
-                  _links: {
-                    self: {
-                      href: "",
-                    },
-                  },
-                  id: 0,
-                  name: "",
-                  media: {
-                    key: {
-                      href: "",
-                    },
-                    id: 0,
-                  },
-                  reagents: [
-                    {
-                      reagent: {
-                        key: {
-                          href: "",
-                        },
-                        name: "",
-                        id: 0,
-                      },
-                      quantity: 0,
-                    },
-                  ],
-                  modified_crafting_slots: [
-                    {
-                      slot_type: {
-                        key: {
-                          href: "",
-                        },
-                        name: "",
-                        id: 0,
-                      },
-                      display_order: 0,
-                    },
-                  ],
-                };
-              }
-              return data;
-            });
-        })
-      )
-      .flat();
-    recipes = await Promise.all(promises);
 
+  try {
+    // let promises: Promise<Recipe>[]
+    for (let category of skillTier.categories) {
+      for (let recipe of category.recipes) {
+        await sleep(100);
+        let recipeById = await getRecipeById(recipe.id);
+        console.log(recipeById.name);
+        recipes.push(recipeById);
+      }
+    }
+    // recipes = await Promise.all(promises);
     return recipes;
   } catch (error) {
     console.log(error);
   }
-
   return recipes;
 }
 
@@ -600,20 +569,15 @@ export async function getRecipesByProfession(
   ];
   try {
     let skillTiers = await getSkillTiersByProfession(profession);
-    // let skillTiers = await Promise.all(skillTierPromises);
-    // let promises = skillTiers
-    //   .map((skillTier) => getRecipesBySkillTier(skillTier))
-    //   .flat();
-    // recipes = (await Promise.all(promises)).flat();
-    let promises = skillTiers
-      .map((skillTier) => getRecipesBySkillTier(skillTier))
-      .flat();
-    recipes = await (await Promise.all(promises)).flat();
+    for (let skillTier of skillTiers) {
+      let skillTierRecipes = await getRecipesBySkillTier(skillTier);
+      console.log(skillTierRecipes);
+      recipes.push(...skillTierRecipes);
+    }
     return recipes;
   } catch (error) {
     console.log(error);
   }
-
   return recipes;
 }
 
