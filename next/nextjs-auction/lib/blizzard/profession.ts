@@ -438,6 +438,7 @@ export async function getSkillTiersByProfession(
       (skillTier) => getSkillTierById(profession.id, skillTier.id)
     );
     skillTiers = await Promise.all(promises);
+    console.log(skillTiers);
     return skillTiers;
   } catch (error) {
     console.log(error);

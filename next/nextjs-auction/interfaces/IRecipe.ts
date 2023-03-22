@@ -1,3 +1,5 @@
+import { Auction } from "./IAuction";
+
 export interface Recipe {
   _links: {
     self: {
@@ -13,6 +15,7 @@ export interface Recipe {
   skillTierId: number;
   skillTierName: string;
   category: string;
+  auctions?: Auction[];
   media: {
     key: {
       href: string;

@@ -42,9 +42,10 @@ model Auction {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  auctionId Int  @unique
   itemId    Int
   quantity  Int
-  buyout    BigInt   @default(0)
+  buyout    BigInt   
 
   @@map("auctions")
 }
