@@ -5,7 +5,14 @@ export interface Recipe {
     };
   };
   id: number;
+  itemId?: number;
+  alliance_itemId?: number;
+  horde_itemId?: number;
   name: string;
+  professionId: number;
+  skillTierId: number;
+  skillTierName: string;
+  category: string;
   media: {
     key: {
       href: string;
@@ -32,4 +39,25 @@ export interface Recipe {
     };
     display_order: number;
   }[];
+  crafted_item?: {
+    key: {
+      href: string;
+    };
+    name: string;
+    id: number;
+  };
+  alliance_crafted_item?: {
+    key: {
+      href: string;
+    };
+    name: string;
+    id: number;
+  };
+  horde_crafted_item?: {
+    key: {
+      href: string;
+    };
+    name: string;
+    id: number;
+  };
 }

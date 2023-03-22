@@ -254,6 +254,7 @@ export async function getProfessionData() {
 }
 
 export async function getProfessionIndex(): Promise<ProfessionIndex> {
+  await sleep(100);
   let accessToken: AccessToken = await getAccessToken();
 
   const url = `https://${process.env.HOST_NAME}/data/wow/profession/index?namespace=static-us&locale=${process.env.LOCALE}&access_token=${accessToken.access_token}`;
@@ -299,6 +300,7 @@ export async function getProfessionIndex(): Promise<ProfessionIndex> {
 export async function getProfessions(
   professionIndex: ProfessionIndex
 ): Promise<Profession[]> {
+  await sleep(100);
   let accessToken: AccessToken = await getAccessToken();
   let professions: Profession[] = [
     {
@@ -355,6 +357,7 @@ export async function getSkillTierById(
   professionId: number,
   skillTierId: number
 ): Promise<SkillTier> {
+  await sleep(100);
   let skillTier: SkillTier;
   let accessToken = await getAccessToken();
   const url = `https://${process.env.HOST_NAME}/data/wow/profession/${professionId}/skill-tier/${skillTierId}?${process.env.NAMESPACE_STATIC}&access_token=${accessToken.access_token}`;
@@ -399,6 +402,7 @@ export async function getSkillTierById(
 export async function getSkillTiersByProfession(
   profession: Profession
 ): Promise<SkillTier[]> {
+  await sleep(100);
   let skillTiers: SkillTier[] = [
     {
       _links: {
@@ -443,6 +447,7 @@ export async function getSkillTiersByProfession(
 }
 
 export async function getRecipeById(recipeId: number): Promise<Recipe> {
+  await sleep(100);
   let accessToken = await getAccessToken();
   //the href given by some recipes does not match all of blizzard's other
   // keys. So the url was implemented manually.
@@ -461,8 +466,10 @@ export async function getRecipeById(recipeId: number): Promise<Recipe> {
 }
 
 export async function getRecipesBySkillTier(
+  profession: Profession,
   skillTier: SkillTier
 ): Promise<Recipe[]> {
+  await sleep(100);
   let recipes: Recipe[] = [
     {
       _links: {
@@ -472,6 +479,10 @@ export async function getRecipesBySkillTier(
       },
       id: 0,
       name: "",
+      professionId: 0,
+      skillTierId: 0,
+      skillTierName: "",
+      category: "",
       media: {
         key: {
           href: "",
@@ -506,16 +517,20 @@ export async function getRecipesBySkillTier(
   ];
 
   try {
-    // let promises: Promise<Recipe>[]
+    recipes.pop();
+    let max = 0;
     for (let category of skillTier.categories) {
       for (let recipe of category.recipes) {
-        await sleep(100);
+        // if (max === 10) break;
         let recipeById = await getRecipeById(recipe.id);
-        console.log(recipeById.name);
+        recipeById.professionId = profession.id;
+        recipeById.skillTierId = skillTier.id;
+        recipeById.skillTierName = skillTier.name;
+        recipeById.category = category.name;
         recipes.push(recipeById);
+        max++;
       }
     }
-    // recipes = await Promise.all(promises);
     return recipes;
   } catch (error) {
     console.log(error);
@@ -535,6 +550,10 @@ export async function getRecipesByProfession(
       },
       id: 0,
       name: "",
+      professionId: 0,
+      skillTierId: 0,
+      skillTierName: "",
+      category: "",
       media: {
         key: {
           href: "",
@@ -570,7 +589,7 @@ export async function getRecipesByProfession(
   try {
     let skillTiers = await getSkillTiersByProfession(profession);
     for (let skillTier of skillTiers) {
-      let skillTierRecipes = await getRecipesBySkillTier(skillTier);
+      let skillTierRecipes = await getRecipesBySkillTier(profession, skillTier);
       console.log(skillTierRecipes);
       recipes.push(...skillTierRecipes);
     }
