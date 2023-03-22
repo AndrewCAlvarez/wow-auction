@@ -1,5 +1,6 @@
 export interface Auction {
   id: number;
+  itemId: number;
   item: {
     id: number;
     context: number;

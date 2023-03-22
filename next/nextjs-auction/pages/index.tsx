@@ -21,10 +21,12 @@ import prisma from "../lib/prisma";
 import { test } from "gray-matter";
 import {
   updateAuctionDb,
+  updateDragonflightProfessionDb,
   updateProfessionDb,
 } from "../lib/database/prismaActions";
 import { getAuctions } from "../lib/blizzard/auction";
 import { Auction } from "../interfaces/IAuction";
+import { dragonIslesRecipes } from "../lib/dragonIslesCraftedItems";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -109,10 +111,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
   // }
   // await updateProfessionDb();
   // await updateAuctionDb();
+  await updateDragonflightProfessionDb();
+
   const professions = await prisma.profession.findMany();
   const blacksmithingRecipes = await prisma.recipe.findMany();
   const prismaAuctions = await prisma.auction.findMany();
-  // TODO: There is problem with this auction model
   const auctions = prismaAuctions.map((auction) => ({
     auctionId: auction.id,
     itemId: auction.itemId,
@@ -137,20 +140,20 @@ export default function Home({
   blacksmithingRecipes: Recipe[];
   auctions: Auction[];
 }) {
-  console.log(professions);
-  console.log(blacksmithingRecipes);
-  let shadowlandsRecipes = blacksmithingRecipes.filter(
-    (recipe) => recipe.skillTierId === 2751
-  );
-  for (let recipe of shadowlandsRecipes) {
-    recipe.auctions = auctions.filter(
-      (auction) => auction.itemId === recipe.itemId
-    );
-    console.log(recipe);
-  }
+  // console.log(professions);
+  // console.log(blacksmithingRecipes);
+  // let shadowlandsRecipes = blacksmithingRecipes.filter(
+  //   (recipe) => recipe.skillTierId === 2751
+  // );
+  // for (let recipe of shadowlandsRecipes) {
+  //   recipe.auctions = auctions.filter(
+  //     (auction) => auction.itemId === recipe.itemId
+  //   );
+  //   console.log(recipe);
+  // }
 
-  console.log(shadowlandsRecipes);
-  console.log(auctions);
+  // console.log(shadowlandsRecipes);
+  // console.log(auctions);
 
   // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
   // const [filteredAuctions, setFilteredAuctions] = useState([]);
