@@ -83,38 +83,29 @@ export const getStaticProps: GetStaticProps = async (context) => {
   //   }
   // }
 
-  // let testRecipe = await getRecipeById(38729);
-  // let testRecipe1 = await getRecipeById(38730);
-  // let testRecipe2 = await getRecipeById(38731);
-  // let recipesArray = [testRecipe, testRecipe1, testRecipe2];
-
-  try {
-    // const deleteProfessions = await prisma.profession.deleteMany();
-    // const addProfessions = await prisma.profession.createMany({
-    //   data: professions.map((profession) => ({
-    //     professionId: profession.id,
-    //     name: profession.name,
-    //   })),
-    // });
-    // const createMany = await prisma.recipe.createMany({
-    //   data: skillTierRecipes.map((recipe) => ({
-    //     data: JSON.stringify(recipe),
-    //   })),
-    // });
-    // console.log(getRecipes);
-  } catch (error) {
-    console.error(error);
-  }
   // let professionRecipes = await getRecipesByProfession(professions[2]);
   // for (let recipe of professionRecipes) {
   //   let item = await getItemById(recipe);
   // }
-  // await updateProfessionDb();
-  // await updateAuctionDb();
-  await updateDragonflightProfessionDb();
+
+  if (false) {
+    // TODO: Set these to update at specified interval
+    // await updateProfessionDb();
+    // await updateAuctionDb();
+    // await updateDragonflightProfessionDb();
+  }
 
   const professions = await prisma.profession.findMany();
-  const blacksmithingRecipes = await prisma.recipe.findMany();
+  const blacksmithingRecipes = await prisma.recipe.findMany({
+    orderBy: [
+      {
+        skillTierName: "asc",
+      },
+      {
+        category: "asc",
+      },
+    ],
+  });
   const prismaAuctions = await prisma.auction.findMany();
   const auctions = prismaAuctions.map((auction) => ({
     auctionId: auction.id,
@@ -122,6 +113,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     quantity: auction.quantity,
     buyout: Number(auction.buyout),
   }));
+
   return {
     props: {
       professions,
@@ -140,28 +132,127 @@ export default function Home({
   blacksmithingRecipes: Recipe[];
   auctions: Auction[];
 }) {
-  // console.log(professions);
-  // console.log(blacksmithingRecipes);
-  // let shadowlandsRecipes = blacksmithingRecipes.filter(
-  //   (recipe) => recipe.skillTierId === 2751
-  // );
-  // for (let recipe of shadowlandsRecipes) {
-  //   recipe.auctions = auctions.filter(
-  //     (auction) => auction.itemId === recipe.itemId
-  //   );
-  //   console.log(recipe);
+  const [profession, setProfession] = useState({ profession: professions[2] });
+
+  // let skillTiers = [];
+  // for (let recipe of blacksmithingRecipes) {
+  //   if (!skillTiers.includes(recipe.skillTierName)) {
+  //     skillTiers.push(recipe.skillTierName);
+  //   }
   // }
 
-  // console.log(shadowlandsRecipes);
-  // console.log(auctions);
+  // console.log(skillTiers);
+  // console.log(blacksmithing);
+  interface Blacksmithing {
+    professionId: 164;
+    skillTiers: [
+      {
+        name: string;
+        id: number;
+        categories: [
+          {
+            name: string;
+            recipes: [
+              {
+                id: number;
+                name: string;
+                itemId?: number;
+                allianceItemId?: number;
+                hordeItemId?: number;
+                data: JSON;
+              }
+            ];
+          }
+        ];
+      }
+    ];
+  }
+  let blacksmithing: Blacksmithing = {
+    professionId: 164,
+    skillTiers: [
+      {
+        name: "",
+        id: 0,
+        categories: [
+          {
+            name: "",
+            recipes: [
+              {
+                id: 0,
+                name: "",
+                itemId: 0,
+                allianceItemId: 0,
+                hordeItemId: 0,
+                data: JSON,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  /**
+   * "id", "data", "name", "professionId", "allianceItemId", "hordeItemId", "itemId", "category", "skillTierId", "skillTierName"
+   */
+  for (let recipe of blacksmithingRecipes) {
+    if (
+      blacksmithing.skillTiers.find(
+        (skillTier) => skillTier.name === recipe.skillTierName
+      ) === undefined
+    ) {
+      blacksmithing.skillTiers.push({
+        name: recipe.skillTierName,
+        id: recipe.skillTierId,
+        categories: [
+          {
+            name: recipe.category,
+            recipes: [{ id: recipe.id, name: recipe.name, data: recipe.data }],
+          },
+        ],
+      });
+    }
+    let skillTierIndex = blacksmithing.skillTiers.findIndex(
+      (skilTier) => skilTier.name === recipe.skillTierName
+    );
+    if (
+      blacksmithing.skillTiers[skillTierIndex].categories.find(
+        (category) => category.name === recipe.category
+      ) === undefined
+    ) {
+      blacksmithing.skillTiers[skillTierIndex].categories.push({
+        name: recipe.category,
+        recipes: [{ id: recipe.id, name: recipe.name, data: recipe.data }],
+      });
+    } else {
+      let categoryIndex = blacksmithing.skillTiers[
+        skillTierIndex
+      ].categories.findIndex((category) => category.name === recipe.category);
 
-  // const [skillTier, setSkillTier] = useState(professionData.allSkillTiers[0]);
-  // const [filteredAuctions, setFilteredAuctions] = useState([]);
-  // console.log(professionData);
-  // function handleChangeTier(skillTier) {
-  //   setSkillTier(skillTier);
-  //   console.log(skillTier.name);
-  // }
+      if (recipe.itemId) {
+        blacksmithing.skillTiers[skillTierIndex].categories[
+          categoryIndex
+        ].recipes.push({
+          id: recipe.id,
+          itemId: recipe.itemId,
+          name: recipe.name,
+          data: recipe.data,
+        });
+      }
+      if (recipe.allianceItemId) {
+        blacksmithing.skillTiers[skillTierIndex].categories[
+          categoryIndex
+        ].recipes.push({
+          id: recipe.id,
+          allianceItemId: recipe.allianceItemId,
+          hordeItemId: recipe.hordeItemId,
+          name: recipe.name,
+          data: recipe.data,
+        });
+      }
+    }
+  }
+  blacksmithing.skillTiers.shift();
+  console.log(blacksmithing);
 
   return (
     // <Layout home>
@@ -179,45 +270,29 @@ export default function Home({
 
     // </Layout>
     <>
-      <h1>{}</h1>
-      {/* <h2>Test</h2>
-      <ul>
-        {professionData.allSkillTiers.map((skillTier) => {
-          return (
-            <li onClick={() => handleChangeTier(skillTier)}>
-              {skillTier.name}
-            </li>
-          );
-        })}
-      </ul>
-      <SkillTierSummary skillTier={skillTier} />
-      <h3>Auctions</h3>
+      <h1>{profession.profession.name}</h1>
+      {blacksmithing.skillTiers.map((skillTier) => {
+        return (
+          <ul>
+            <li style={{ fontSize: 30 }}>{skillTier.name}</li>
 
-      <ul>
-        {filteredAuctions
-          ? filteredAuctions.map((filteredAuction) => (
-              <li>
-                {filteredAuction.name} | {filteredAuction.quantity} |{" "}
-                {filteredAuction.buyout}
-              </li>
-            ))
-          : ""}
-      </ul>
-      <h3>{skillTier.name}</h3>
-      <ul>
-        {skillTier.categories.map((category) => (
-          <li>
-            <h4>{category.name}</h4>
-            <ul>
-              {category.recipes.map((recipe) => (
-                <li>
-                  <Link href={`/recipes/${recipe.id}`}>{recipe.name}</Link>
-                </li>
+            <li>
+              {skillTier.categories.map((category) => (
+                <ul>
+                  <li style={{ fontSize: 25, color: "#aaa" }}>
+                    {category.name}
+                  </li>
+                  {category.recipes.map((recipe) => (
+                    <li style={{ fontSize: 20, color: "#aaa" }}>
+                      {recipe.name}
+                    </li>
+                  ))}
+                </ul>
               ))}
-            </ul>
-          </li>
-        ))}
-      </ul> */}
+            </li>
+          </ul>
+        );
+      })}
     </>
   );
 }
