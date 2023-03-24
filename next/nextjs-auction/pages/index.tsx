@@ -27,6 +27,10 @@ import {
 import { getAuctions } from "../lib/blizzard/auction";
 import { Auction } from "../interfaces/IAuction";
 import { dragonIslesRecipes } from "../lib/dragonIslesCraftedItems";
+import {
+  Blacksmithing,
+  createBlacksmithingObject,
+} from "../interfaces/IBlacksmithing";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -133,126 +137,25 @@ export default function Home({
   auctions: Auction[];
 }) {
   const [profession, setProfession] = useState({ profession: professions[2] });
+  const [filteredAuctions, setFilteredAuctions] = useState({});
+  const blacksmithing: Blacksmithing =
+    createBlacksmithingObject(blacksmithingRecipes);
 
-  // let skillTiers = [];
-  // for (let recipe of blacksmithingRecipes) {
-  //   if (!skillTiers.includes(recipe.skillTierName)) {
-  //     skillTiers.push(recipe.skillTierName);
-  //   }
-  // }
-
-  // console.log(skillTiers);
-  // console.log(blacksmithing);
-  interface Blacksmithing {
-    professionId: 164;
-    skillTiers: [
-      {
-        name: string;
-        id: number;
-        categories: [
-          {
-            name: string;
-            recipes: [
-              {
-                id: number;
-                name: string;
-                itemId?: number;
-                allianceItemId?: number;
-                hordeItemId?: number;
-                data: JSON;
-              }
-            ];
-          }
-        ];
-      }
-    ];
-  }
-  let blacksmithing: Blacksmithing = {
-    professionId: 164,
-    skillTiers: [
-      {
-        name: "",
-        id: 0,
-        categories: [
-          {
-            name: "",
-            recipes: [
-              {
-                id: 0,
-                name: "",
-                itemId: 0,
-                allianceItemId: 0,
-                hordeItemId: 0,
-                data: JSON,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  };
-  /**
-   * "id", "data", "name", "professionId", "allianceItemId", "hordeItemId", "itemId", "category", "skillTierId", "skillTierName"
-   */
-  for (let recipe of blacksmithingRecipes) {
-    if (
-      blacksmithing.skillTiers.find(
-        (skillTier) => skillTier.name === recipe.skillTierName
-      ) === undefined
-    ) {
-      blacksmithing.skillTiers.push({
-        name: recipe.skillTierName,
-        id: recipe.skillTierId,
-        categories: [
-          {
-            name: recipe.category,
-            recipes: [{ id: recipe.id, name: recipe.name, data: recipe.data }],
-          },
-        ],
-      });
-    }
-    let skillTierIndex = blacksmithing.skillTiers.findIndex(
-      (skilTier) => skilTier.name === recipe.skillTierName
+  function filterAuctionsBySkillTier() {
+    console.log(blacksmithing.skillTiers[0].name);
+    console.log(auctions);
+    let newAuctions = blacksmithing.skillTiers[0].categories.map((category) =>
+      category.recipes.map((recipe) => {
+        let recipeAuctions = auctions.filter(
+          (auction) => auction.itemId === recipe.itemId
+        );
+        blacksmithing.skillTiers;
+      })
     );
-    if (
-      blacksmithing.skillTiers[skillTierIndex].categories.find(
-        (category) => category.name === recipe.category
-      ) === undefined
-    ) {
-      blacksmithing.skillTiers[skillTierIndex].categories.push({
-        name: recipe.category,
-        recipes: [{ id: recipe.id, name: recipe.name, data: recipe.data }],
-      });
-    } else {
-      let categoryIndex = blacksmithing.skillTiers[
-        skillTierIndex
-      ].categories.findIndex((category) => category.name === recipe.category);
-
-      if (recipe.itemId) {
-        blacksmithing.skillTiers[skillTierIndex].categories[
-          categoryIndex
-        ].recipes.push({
-          id: recipe.id,
-          itemId: recipe.itemId,
-          name: recipe.name,
-          data: recipe.data,
-        });
-      }
-      if (recipe.allianceItemId) {
-        blacksmithing.skillTiers[skillTierIndex].categories[
-          categoryIndex
-        ].recipes.push({
-          id: recipe.id,
-          allianceItemId: recipe.allianceItemId,
-          hordeItemId: recipe.hordeItemId,
-          name: recipe.name,
-          data: recipe.data,
-        });
-      }
-    }
+    newAuctions.forEach((auction) => {});
+    console.log(newAuctions);
   }
-  blacksmithing.skillTiers.shift();
-  console.log(blacksmithing);
+  filterAuctionsBySkillTier();
 
   return (
     // <Layout home>
