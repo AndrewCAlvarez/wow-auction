@@ -34,6 +34,7 @@ import {
 import SkillTier from "../components/SkillTier";
 import ProfessionMenu from "../components/ProfessionMenu";
 import InformationPanel from "../components/InformationPanel";
+import home from "../styles/Home.module.css";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -202,7 +203,7 @@ export default function Home({
   console.log(selectedRecipe);
 
   return (
-    <section>
+    <section className={home.sectionMain}>
       <ProfessionMenu
         profession={profession}
         blacksmithingState={blacksmithingState}

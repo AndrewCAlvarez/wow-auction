@@ -1,5 +1,6 @@
 import React from "react";
 import collapsible from "../styles/collapsible.module.css";
+import professionMenu from "../styles/professionMenu.module.css";
 import SkillTier from "./SkillTier";
 
 export default function ProfessionMenu(props: any) {

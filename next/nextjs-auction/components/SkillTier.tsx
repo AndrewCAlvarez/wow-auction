@@ -1,7 +1,7 @@
 import React from "react";
 import collapsible from "../styles/collapsible.module.css";
 import { Blacksmithing } from "../interfaces/IBlacksmithing";
-
+import professionMenu from "../styles/professionMenu.module.css";
 export default function SkillTier(props: any) {
   let index = props.blacksmithingState.skillTiers.indexOf(props.skillTier);
 
@@ -44,8 +44,11 @@ export default function SkillTier(props: any) {
           <li>{category.name}</li>
           {category.recipes.map((recipe: any) => (
             <li>
-              <button onClick={() => handleSelectRecipe(recipe)}>
-                {recipe.name}(
+              <button
+                className={professionMenu.button}
+                onClick={() => handleSelectRecipe(recipe)}
+              >
+                {recipe.name} {"    "}(
                 {
                   props.auctions.filter(
                     (auction) => auction.itemId === recipe.itemId
