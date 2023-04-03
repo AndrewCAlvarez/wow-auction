@@ -1,3 +1,5 @@
+import { Auction } from "./IAuction";
+
 export interface Blacksmithing {
   professionId: 164;
   skillTiers: [
@@ -15,11 +17,12 @@ export interface Blacksmithing {
               allianceItemId?: number;
               hordeItemId?: number;
               data: JSON;
-              auctions?: JSON;
+              auctions?: Auction[];
             }
           ];
         }
       ];
+      toggleMenu: boolean;
     }
   ];
 }
@@ -46,6 +49,7 @@ export function createBlacksmithingObject(blacksmithingRecipes) {
             ],
           },
         ],
+        toggleMenu: false,
       },
     ],
   };
@@ -64,6 +68,7 @@ export function createBlacksmithingObject(blacksmithingRecipes) {
             recipes: [{ id: recipe.id, name: recipe.name, data: recipe.data }],
           },
         ],
+        toggleMenu: false,
       });
     }
     let skillTierIndex = blacksmithing.skillTiers.findIndex(

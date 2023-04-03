@@ -1,0 +1,36 @@
+.collapsibleMenu {
+  width: 30rem;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.collapsible {
+  background-color: #151736;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: 1px solid #181a39;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active,
+.collapsible:hover {
+  background-color: #293054;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.block {
+  display: block;
+}
+.hidden {
+  display: none;
+}

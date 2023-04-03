@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getProfessionIndex,
   getProfessionData,
@@ -14,7 +14,6 @@ import SkillTierSummary from "../components/skillTierSummary";
 import { GetStaticProps } from "next";
 import { Profession } from "../interfaces/IProfession";
 import { ProfessionIndex } from "../interfaces/IProfessionIndex";
-import { SkillTier } from "../interfaces/ISkillTier";
 import { Recipe } from "../interfaces/IRecipe";
 import { getItemById } from "../lib/blizzard/item";
 import prisma from "../lib/prisma";
@@ -31,6 +30,8 @@ import {
   Blacksmithing,
   createBlacksmithingObject,
 } from "../interfaces/IBlacksmithing";
+import collapsible from "../styles/collapsible.module.css";
+import SkillTier from "../components/SkillTier";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -110,6 +111,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       },
     ],
   });
+
   const prismaAuctions = await prisma.auction.findMany();
   const auctions = prismaAuctions.map((auction) => ({
     auctionId: auction.id,
@@ -136,66 +138,64 @@ export default function Home({
   blacksmithingRecipes: Recipe[];
   auctions: Auction[];
 }) {
-  const [profession, setProfession] = useState({ profession: professions[2] });
-  const [filteredAuctions, setFilteredAuctions] = useState({});
   const blacksmithing: Blacksmithing =
     createBlacksmithingObject(blacksmithingRecipes);
+  const [profession, setProfession] = useState({ profession: professions[2] });
+  const [filteredAuctions, setFilteredAuctions] = useState({});
+  const [blacksmithingState, setBlacksmithingState] = useState(blacksmithing);
 
-  function filterAuctionsBySkillTier() {
-    console.log(blacksmithing.skillTiers[0].name);
-    console.log(auctions);
-    let newAuctions = blacksmithing.skillTiers[0].categories.map((category) =>
-      category.recipes.map((recipe) => {
-        let recipeAuctions = auctions.filter(
-          (auction) => auction.itemId === recipe.itemId
-        );
-        blacksmithing.skillTiers;
-      })
-    );
-    newAuctions.forEach((auction) => {});
-    console.log(newAuctions);
-  }
-  filterAuctionsBySkillTier();
+  // function filterAuctionsBySkillTier(skillTierId) {
+  //   let skillTierIndex = blacksmithing.skillTiers.findIndex(
+  //     (skillTier) => skillTier.id === skillTierId
+  //   );
+
+  //   // let newAuctions = blacksmithing.skillTiers[skillTierIndex].categories.map(
+  //   //   (category) =>
+  //   //     category.recipes.map((recipe) => {
+  //   //       let newAuctions = [];
+  //   //       auctions.forEach((auction) => {
+  //   //         if (auction.itemId === recipe.itemId) {
+  //   //           newAuctions.push(auction);
+  //   //         }
+  //   //       });
+  //   //       console.log(newAuctions);
+  //   //     })
+  //   // );
+
+  //   blacksmithing.skillTiers[skillTierIndex].categories.map((category) =>
+  //     category.recipes.forEach((recipe) => {
+  //       let recipeAuctions = auctions.filter(
+  //         (auction) => auction.itemId === recipe.itemId
+  //       );
+  //       console.log(recipeAuctions);
+  //       if (recipe.auctions === undefined) {
+  //         recipe.auctions = recipeAuctions;
+  //       } else {
+  //         recipe.auctions.push(recipeAuctions);
+  //       }
+  //     })
+  //   );
+  //   console.log(blacksmithing);
+  //   // setFilteredAuctions(newAuctions);
+  //   // console.log(newAuctions);
+  //   // console.log("filteredAuctions:");
+  //   // console.log(filteredAuctions);
+  // }
 
   return (
-    // <Layout home>
-    //   <Head>
-    //     <title>{siteTitle}</title>
-    //   </Head>
-
-    //   <section className={utilStyles.headingMd}>
-    //     <ul>
-    //       <li>
-    //         <Link href="/test">Test</Link>
-    //       </li>
-    //     </ul>
-    //   </section>
-
-    // </Layout>
     <>
       <h1>{profession.profession.name}</h1>
-      {blacksmithing.skillTiers.map((skillTier) => {
-        return (
-          <ul>
-            <li style={{ fontSize: 30 }}>{skillTier.name}</li>
-
-            <li>
-              {skillTier.categories.map((category) => (
-                <ul>
-                  <li style={{ fontSize: 25, color: "#aaa" }}>
-                    {category.name}
-                  </li>
-                  {category.recipes.map((recipe) => (
-                    <li style={{ fontSize: 20, color: "#aaa" }}>
-                      {recipe.name}
-                    </li>
-                  ))}
-                </ul>
-              ))}
-            </li>
-          </ul>
-        );
-      })}
+      <menu className={collapsible.collapsibleMenu}>
+        <ul>
+          {blacksmithingState.skillTiers.map((skillTier) => (
+            <SkillTier
+              skillTier={skillTier}
+              blacksmithingState={blacksmithingState}
+              setBlacksmithingState={setBlacksmithingState}
+            />
+          ))}
+        </ul>
+      </menu>
     </>
   );
 }
