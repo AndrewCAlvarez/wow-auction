@@ -27,7 +27,7 @@ export interface Blacksmithing {
   ];
 }
 
-export function createBlacksmithingObject(blacksmithingRecipes) {
+export function createBlacksmithingObject(blacksmithingRecipes: any) {
   let blacksmithing: Blacksmithing = {
     professionId: 164,
     skillTiers: [

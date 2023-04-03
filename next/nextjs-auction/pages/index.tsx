@@ -30,8 +30,9 @@ import {
   Blacksmithing,
   createBlacksmithingObject,
 } from "../interfaces/IBlacksmithing";
-import collapsible from "../styles/collapsible.module.css";
+
 import SkillTier from "../components/SkillTier";
+import ProfessionMenu from "../components/ProfessionMenu";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -183,19 +184,10 @@ export default function Home({
   // }
 
   return (
-    <>
-      <h1>{profession.profession.name}</h1>
-      <menu className={collapsible.collapsibleMenu}>
-        <ul>
-          {blacksmithingState.skillTiers.map((skillTier) => (
-            <SkillTier
-              skillTier={skillTier}
-              blacksmithingState={blacksmithingState}
-              setBlacksmithingState={setBlacksmithingState}
-            />
-          ))}
-        </ul>
-      </menu>
-    </>
+    <ProfessionMenu
+      profession={profession}
+      blacksmithingState={blacksmithingState}
+      setBlacksmithingState={setBlacksmithingState}
+    />
   );
 }

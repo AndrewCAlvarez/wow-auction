@@ -7,7 +7,7 @@ export default function SkillTier(props: any) {
 
   function handleToggle() {
     const nextSkillTiers = props.blacksmithingState.skillTiers.map(
-      (skillTier) => {
+      (skillTier: any) => {
         if (skillTier === props.skillTier) {
           return {
             ...skillTier,
