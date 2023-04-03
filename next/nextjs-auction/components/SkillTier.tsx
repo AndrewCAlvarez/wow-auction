@@ -23,6 +23,10 @@ export default function SkillTier(props: any) {
     });
   }
 
+  function handleSelectRecipe(recipe) {
+    props.setSelectedRecipe(recipe);
+  }
+
   return (
     <li>
       {/* <SkillTierHeading name={props.skillTier.name} /> */}
@@ -39,7 +43,17 @@ export default function SkillTier(props: any) {
         >
           <li>{category.name}</li>
           {category.recipes.map((recipe: any) => (
-            <li>{recipe.name}</li>
+            <li>
+              <button onClick={() => handleSelectRecipe(recipe)}>
+                {recipe.name}(
+                {
+                  props.auctions.filter(
+                    (auction) => auction.itemId === recipe.itemId
+                  ).length
+                }
+                )
+              </button>
+            </li>
           ))}
         </ul>
       ))}

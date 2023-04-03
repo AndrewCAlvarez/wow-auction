@@ -12,6 +12,8 @@ export default function ProfessionMenu(props: any) {
             skillTier={skillTier}
             blacksmithingState={props.blacksmithingState}
             setBlacksmithingState={props.setBlacksmithingState}
+            setSelectedRecipe={props.setSelectedRecipe}
+            auctions={props.auctions}
           />
         ))}
       </ul>
