@@ -200,7 +200,6 @@ export default function Home({
   }
   // sortAuctionsByItemId();
   auctions.sort((auction) => auction.itemId);
-  console.log(selectedRecipe);
 
   return (
     <section className={home.sectionMain}>
