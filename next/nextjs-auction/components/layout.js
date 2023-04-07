@@ -4,65 +4,22 @@ import Link from "next/link";
 import utilStyles from "../styles/utils.module.css";
 import Image from "next/image";
 
-const name = "Bill";
-export const siteTitle = "Auction";
-
-export default function Layout({ children, home }) {
+export default function Layout({ children }) {
   return (
-    <div className={styles.container}>
-      {/* <Head>
-        <Link rel="icon" href="/favicon.ico" />
-        <meta name="description" content="Research auction house data" />
-        <meta
-          property="og:image"
-          content={`https://og-image.vercel.app/${encodeURI(
-            siteTitle
-          )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-        />
-        <meta name="og:title" content={siteTitle} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Head>
-
-      <header className={styles.header}>
-        {home ? (
-          <>
-            <Image
-              priority
-              src="/images/dwarf-icon-26.jpg"
-              className={utilStyles.borderCircle}
-              height={144}
-              width={144}
-              alt=""
-            />
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-          </>
-        ) : (
-          <>
-            <Link href="/">
-              <Image
-                priority
-                src="/images/dwarf-icon-26.jpg"
-                className={utilStyles.borderCircle}
-                height={108}
-                width={108}
-                alt=""
-              />
-            </Link>
-            <h2 className={utilStyles.headingLg}>
-              <Link href="/" className={utilStyles.colorInherit}>
-                {name}
-              </Link>
-            </h2>
-          </>
-        )}
-      </header>
-
+    <>
+      <nav>
+        <p>KoaCraft</p>
+        <select>
+          <option value="Proudmoore">Proudmoore</option>
+        </select>
+        <menu>
+          <ul>
+            <li>Blacksmithing</li>
+          </ul>
+        </menu>
+      </nav>
       <main>{children}</main>
-      {!home && (
-        <div className={styles.backToHome}>
-          <Link href="/">Back</Link>
-        </div>
-      )} */}
-    </div>
+      <footer>Footer</footer>
+    </>
   );
 }

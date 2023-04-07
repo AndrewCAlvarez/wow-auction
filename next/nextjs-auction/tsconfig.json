@@ -19,7 +19,8 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/testPage.tsx",
-    "pages/api/test.js"
+    "pages/api/test.js",
+    "pages/recipes/[id].js"
   ],
   "exclude": ["node_modules"]
 }

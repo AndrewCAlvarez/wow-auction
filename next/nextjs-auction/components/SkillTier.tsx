@@ -1,12 +1,13 @@
 import React from "react";
 import collapsible from "../styles/collapsible.module.css";
-import { Blacksmithing } from "../interfaces/IBlacksmithing";
 import professionMenu from "../styles/professionMenu.module.css";
+import Link from "next/link";
+
 export default function SkillTier(props: any) {
   let index = props.blacksmithingState.skillTiers.indexOf(props.skillTier);
 
   function handleToggle() {
-    const nextSkillTiers = props.blacksmithingState.skillTiers.map(
+    const newSkillTiers = props.blacksmithingState.skillTiers.map(
       (skillTier: any) => {
         if (skillTier === props.skillTier) {
           return {
@@ -19,11 +20,11 @@ export default function SkillTier(props: any) {
     );
     props.setBlacksmithingState({
       ...props.blacksmithingState,
-      skillTiers: nextSkillTiers,
+      skillTiers: newSkillTiers,
     });
   }
 
-  function handleSelectRecipe(recipe) {
+  function handleSelectRecipe(recipe: any) {
     props.setSelectedRecipe(recipe);
   }
 
@@ -44,18 +45,19 @@ export default function SkillTier(props: any) {
           <li>{category.name}</li>
           {category.recipes.map((recipe: any) => (
             <li>
-              <button
+              <Link
+                href={"/recipes/" + recipe.id}
                 className={professionMenu.button}
                 onClick={() => handleSelectRecipe(recipe)}
               >
-                {recipe.name} {"    "}(
+                {recipe.name} (
                 {
                   props.auctions.filter(
-                    (auction) => auction.itemId === recipe.itemId
+                    (auction: any) => auction.itemId === recipe.itemId
                   ).length
                 }
                 )
-              </button>
+              </Link>
             </li>
           ))}
         </ul>

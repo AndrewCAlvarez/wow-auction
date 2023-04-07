@@ -35,6 +35,7 @@ import SkillTier from "../components/SkillTier";
 import ProfessionMenu from "../components/ProfessionMenu";
 import InformationPanel from "../components/InformationPanel";
 import home from "../styles/Home.module.css";
+import { Commodity } from "@prisma/client";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // let professions: Profession[] = [];
@@ -122,12 +123,23 @@ export const getStaticProps: GetStaticProps = async (context) => {
     quantity: auction.quantity,
     buyout: Number(auction.buyout),
   }));
+  // const prismaCommodities = await prisma.commodity.findMany();
+  // const commodities = prismaAuctions.map((auction) => ({
+  //   auctionId: auction.id,
+  //   itemId: auction.itemId,
+  //   quantity: auction.quantity,
+  //   buyout: Number(auction.buyout),
+  // }));
+
+  const blacksmithing: Blacksmithing =
+    createBlacksmithingObject(blacksmithingRecipes);
 
   return {
     props: {
       professions,
       blacksmithingRecipes,
       auctions,
+      blacksmithing,
     },
   };
 };
@@ -135,71 +147,71 @@ export const getStaticProps: GetStaticProps = async (context) => {
 export default function Home({
   professions,
   blacksmithingRecipes,
+  blacksmithing,
   auctions,
 }: {
   professions: Profession[];
   blacksmithingRecipes: Recipe[];
+  blacksmithing: Blacksmithing;
   auctions: Auction[];
 }) {
-  const blacksmithing: Blacksmithing =
-    createBlacksmithingObject(blacksmithingRecipes);
   const [profession, setProfession] = useState({ profession: professions[2] });
   const [filteredAuctions, setFilteredAuctions] = useState({});
   const [blacksmithingState, setBlacksmithingState] = useState(blacksmithing);
   const [selectedRecipe, setSelectedRecipe] = useState({ name: "test item" });
 
   // Not used
-  function filterAuctionsBySkillTier(skillTierId: number) {
-    let skillTierIndex = blacksmithing.skillTiers.findIndex(
-      (skillTier) => skillTier.id === skillTierId
-    );
+  // function filterAuctionsBySkillTier(skillTierId: number) {
+  //   let skillTierIndex = blacksmithing.skillTiers.findIndex(
+  //     (skillTier) => skillTier.id === skillTierId
+  //   );
 
-    // let newAuctions = blacksmithing.skillTiers[skillTierIndex].categories.map(
-    //   (category) =>
-    //     category.recipes.map((recipe) => {
-    //       let newAuctions = [];
-    //       auctions.forEach((auction) => {
-    //         if (auction.itemId === recipe.itemId) {
-    //           newAuctions.push(auction);
-    //         }
-    //       });
-    //       console.log(newAuctions);
-    //     })
-    // );
+  // let newAuctions = blacksmithing.skillTiers[skillTierIndex].categories.map(
+  //   (category) =>
+  //     category.recipes.map((recipe) => {
+  //       let newAuctions = [];
+  //       auctions.forEach((auction) => {
+  //         if (auction.itemId === recipe.itemId) {
+  //           newAuctions.push(auction);
+  //         }
+  //       });
+  //       console.log(newAuctions);
+  //     })
+  // );
 
-    blacksmithing.skillTiers[skillTierIndex].categories.map((category) =>
-      category.recipes.forEach((recipe) => {
-        let recipeAuctions = auctions.filter(
-          (auction) => auction.itemId === recipe.itemId
-        );
-        console.log(recipeAuctions);
-        if (recipe.auctions === undefined) {
-          recipe.auctions = recipeAuctions;
-        } else {
-          recipe.auctions.push(recipeAuctions);
-        }
-      })
-    );
-    console.log(blacksmithing);
-    // setFilteredAuctions(newAuctions);
-    // console.log(newAuctions);
-    // console.log("filteredAuctions:");
-    // console.log(filteredAuctions);
-  }
+  // blacksmithing.skillTiers[skillTierIndex].categories.map((category) =>
+  //   category.recipes.forEach((recipe) => {
+  //     let recipeAuctions = auctions.filter(
+  //       (auction) => auction.itemId === recipe.itemId
+  //     );
+  //     console.log(recipeAuctions);
+  //     if (recipe.auctions === undefined) {
+  //       recipe.auctions = recipeAuctions;
+  //     } else {
+  //       recipe.auctions.push(recipeAuctions);
+  //     }
+  //   })
+  // );
+
+  // setFilteredAuctions(newAuctions);
+  // console.log(newAuctions);
+  // console.log("filteredAuctions:");
+  // console.log(filteredAuctions);
+  // }
   // Not used
-  function sortAuctionsByItemId() {
-    let sortedAuctions = {};
-    auctions.forEach((auction) => {
-      if (!sortedAuctions[auction.itemId]) {
-        sortedAuctions[auction.itemId] = [];
-      }
-      sortedAuctions[auction.itemId].push(auction);
-    });
+  // function sortAuctionsByItemId() {
+  //   let sortedAuctions = {};
+  //   auctions.forEach((auction) => {
+  //     if (!sortedAuctions[auction.itemId]) {
+  //       sortedAuctions[auction.itemId] = [];
+  //     }
+  //     sortedAuctions[auction.itemId].push(auction);
+  //   });
 
-    console.log(sortedAuctions);
-  }
+  //   console.log(sortedAuctions);
+  // }
   // sortAuctionsByItemId();
-  auctions.sort((auction) => auction.itemId);
+  // auctions.sort((auction) => auction.itemId);
 
   return (
     <section className={home.sectionMain}>
@@ -210,7 +222,7 @@ export default function Home({
         setSelectedRecipe={setSelectedRecipe}
         auctions={auctions}
       />
-      <InformationPanel auctions={auctions} selectedRecipe={selectedRecipe} />
+      {/* <InformationPanel auctions={auctions} selectedRecipe={selectedRecipe} /> */}
     </section>
   );
 }

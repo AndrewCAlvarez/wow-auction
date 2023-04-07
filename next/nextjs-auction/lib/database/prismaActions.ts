@@ -124,3 +124,25 @@ export async function updateAuctionDb() {
     skipDuplicates: true,
   });
 }
+
+export async function getAllRecipeIds() {
+  const recipes = await prisma.recipe.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return recipes.map((recipe) => {
+    return {
+      params: {
+        id: recipe.id.toString(),
+      },
+    };
+  });
+}
+
+export async function getRecipeData(id: any) {
+  const data = await prisma.recipe.findUnique({
+    where: { id: Number(id) },
+  });
+  return { id, data };
+}
