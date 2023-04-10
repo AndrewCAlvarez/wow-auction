@@ -116,7 +116,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
     ],
   });
 
-  const prismaAuctions = await prisma.auction.findMany();
+  const prismaAuctions = await prisma.auction.findMany({
+    select: {
+      id: true,
+      itemId: true,
+      quantity: true,
+      buyout: true,
+    },
+  });
   const auctions = prismaAuctions.map((auction) => ({
     auctionId: auction.id,
     itemId: auction.itemId,
@@ -222,6 +229,7 @@ export default function Home({
         setSelectedRecipe={setSelectedRecipe}
         auctions={auctions}
       />
+
       {/* <InformationPanel auctions={auctions} selectedRecipe={selectedRecipe} /> */}
     </section>
   );

@@ -146,3 +146,17 @@ export async function getRecipeData(id: any) {
   });
   return { id, data };
 }
+
+export async function getRecipeAuctions(data: any) {
+  const prismaAuctions = await prisma.auction.findMany({
+    where: { itemId: Number(data.data.itemId) },
+  });
+  const auctions = prismaAuctions.map((auction) => {
+    return {
+      quantity: auction.quantity,
+      buyout: Number(auction.buyout),
+    };
+  });
+
+  return auctions;
+}
